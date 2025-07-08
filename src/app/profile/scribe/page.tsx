@@ -161,7 +161,7 @@ export default function ScribeProfilePage() {
 
               {/* Subject Expertise */}
               <div>
-                <Label className="text-base font-medium mb-3 block">Subjects you're confident in *</Label>
+                <Label className="text-base font-medium mb-3 block">Subjects you&apos;re confident in *</Label>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {subjects.map((subject) => (
                     <div key={subject} className="flex items-center space-x-2">

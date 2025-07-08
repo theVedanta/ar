@@ -54,7 +54,7 @@ export default function HelpPage() {
                   </AccordionItem>
 
                   <AccordionItem value="item-4">
-                    <AccordionTrigger>What if I'm not satisfied with my assigned scribe?</AccordionTrigger>
+                    <AccordionTrigger>What if I&apos;m not satisfied with my assigned scribe?</AccordionTrigger>
                     <AccordionContent>
                       If you have concerns about your assigned scribe, please contact our support team immediately. We
                       can help resolve issues or find an alternative scribe if necessary. Your feedback is important to
@@ -83,7 +83,7 @@ export default function HelpPage() {
                     <AccordionTrigger>How do I cancel or reschedule a scribe request?</AccordionTrigger>
                     <AccordionContent>
                       You can cancel or reschedule through your dashboard or by contacting support. Please provide as
-                      much notice as possible to respect your scribe's time. For emergency changes, call our support
+                      much notice as possible to respect your scribe&apos;s time. For emergency changes, call our support
                       hotline.
                     </AccordionContent>
                   </AccordionItem>

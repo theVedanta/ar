@@ -102,7 +102,7 @@ export default function FeedbackPage() {
 
                 <div>
                   <Label className="text-base font-medium mb-3 block">Writing/Typing Speed</Label>
-                  <p className="text-sm text-gray-600 mb-2">Was the scribe's writing/typing speed adequate?</p>
+                  <p className="text-sm text-gray-600 mb-2">Was the scribe&apos;s writing/typing speed adequate?</p>
                   <RatingStars
                     rating={ratings.writingSpeed}
                     onRatingChange={(rating) => handleRatingChange("writingSpeed", rating)}

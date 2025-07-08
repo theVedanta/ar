@@ -60,7 +60,6 @@ const matchedScribes = [
 ]
 
 export default function StudentDashboard() {
-  const [selectedScribe, setSelectedScribe] = useState<number | null>(null)
   const [requestStatus, setRequestStatus] = useState<{ [key: number]: string }>({})
 
   const handleContactScribe = (scribeId: number) => {

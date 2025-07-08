@@ -260,7 +260,7 @@ export default function AdminDashboard() {
                           ))}
                         </div>
                       </div>
-                      <p className="text-sm text-gray-700">"{feedback.feedback}"</p>
+                      <p className="text-sm text-gray-700">&quot;{feedback.feedback}&quot;</p>
                     </div>
                   </CardContent>
                 </Card>
