@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { Users, BookOpen, Star, Eye } from "lucide-react";
 import WorldMap from "@/components/ui/world-map";
-import { motion } from "motion/react";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { Input } from "@/components/ui/input";
 
@@ -220,7 +219,7 @@ export default function HomePage() {
             </div>
 
             {/* Footer */}
-            <footer className="bg-gray-800 text-white py-10 px-4">
+            <footer className="bg-neutral-950 text-white py-10 px-4">
                 <div className="container mx-auto text-center">
                     <p className="text-sm">
                         &copy; 2024 ScribeConnect. Empowering education through
