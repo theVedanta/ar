@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { CalendarDays, MapPin } from "lucide-react"
 
 export default function StudentProfilePage() {
@@ -20,8 +19,8 @@ export default function StudentProfilePage() {
     age: "",
     subjects: [] as string[],
     examName: "",
-    examType: "",
-    language: "",
+    examType: [] as string[],
+    language: [] as string[],
     genderPreference: "",
     examDate: "",
     examTime: "",
@@ -43,11 +42,45 @@ export default function StudentProfilePage() {
     "Computer Science",
   ]
 
+  const examTypes = [
+    { value: "descriptive", label: "Descriptive" },
+    { value: "mcq", label: "MCQ" },
+    { value: "computerised", label: "Computerised" },
+  ]
+
+  const languages = [
+    { value: "english", label: "English" },
+    { value: "hindi", label: "Hindi" },
+    { value: "bengali", label: "Bengali" },
+    { value: "telugu", label: "Telugu" },
+    { value: "marathi", label: "Marathi" },
+    { value: "tamil", label: "Tamil" },
+    { value: "urdu", label: "Urdu" },
+    { value: "gujarati", label: "Gujarati" },
+    { value: "regional", label: "Other" },
+  ]
+
   const handleSubjectChange = (subject: string, checked: boolean) => {
     if (checked) {
       setFormData((prev) => ({ ...prev, subjects: [...prev.subjects, subject] }))
     } else {
       setFormData((prev) => ({ ...prev, subjects: prev.subjects.filter((s) => s !== subject) }))
+    }
+  }
+
+  const handleExamTypeChange = (type: string, checked: boolean) => {
+    if (checked) {
+      setFormData((prev) => ({ ...prev, examType: [...prev.examType, type] }))
+    } else {
+      setFormData((prev) => ({ ...prev, examType: prev.examType.filter((t) => t !== type) }))
+    }
+  }
+
+  const handleLanguageChange = (lang: string, checked: boolean) => {
+    if (checked) {
+      setFormData((prev) => ({ ...prev, language: [...prev.language, lang] }))
+    } else {
+      setFormData((prev) => ({ ...prev, language: prev.language.filter((l) => l !== lang) }))
     }
   }
 
@@ -136,42 +169,35 @@ export default function StudentProfilePage() {
 
                 <div>
                   <Label className="text-base font-medium">Exam Type *</Label>
-                  <RadioGroup
-                    value={formData.examType}
-                    onValueChange={(value) => setFormData((prev) => ({ ...prev, examType: value }))}
-                    className="flex flex-wrap gap-4 mt-2"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="descriptive" id="descriptive" />
-                      <Label htmlFor="descriptive">Descriptive</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="mcq" id="mcq" />
-                      <Label htmlFor="mcq">MCQ</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="computerised" id="computerised" />
-                      <Label htmlFor="computerised">Computerised</Label>
-                    </div>
-                  </RadioGroup>
+                  <div className="flex flex-wrap gap-4 mt-2">
+                    {examTypes.map((type) => (
+                      <div key={type.value} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`examType-${type.value}`}
+                          checked={formData.examType.includes(type.value)}
+                          onCheckedChange={(checked) => handleExamTypeChange(type.value, checked as boolean)}
+                        />
+                        <Label htmlFor={`examType-${type.value}`}>{type.label}</Label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="language">Language Preference *</Label>
-                    <Select
-                      value={formData.language}
-                      onValueChange={(value) => setFormData((prev) => ({ ...prev, language: value }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select language" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="english">English</SelectItem>
-                        <SelectItem value="hindi">Hindi</SelectItem>
-                        <SelectItem value="regional">Regional Language</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label className="text-base font-medium">Language Preference *</Label>
+                    <div className="flex flex-wrap gap-4 mt-2">
+                      {languages.map((lang) => (
+                        <div key={lang.value} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`language-${lang.value}`}
+                            checked={formData.language.includes(lang.value)}
+                            onCheckedChange={(checked) => handleLanguageChange(lang.value, checked as boolean)}
+                          />
+                          <Label htmlFor={`language-${lang.value}`}>{lang.label}</Label>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <div>
