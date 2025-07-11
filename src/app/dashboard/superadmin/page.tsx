@@ -32,10 +32,10 @@ import {
 
 // Mock data for admin dashboard
 const stats = {
-    totalStudents: 32,
-    totalScribes: 14,
-    activeMatches: 6,
-    pendingRequests: 3,
+    totalStudents: 206,
+    totalScribes: 139,
+    activeMatches: 73,
+    pendingRequests: 62,
 };
 
 const allMatches = [
@@ -142,9 +142,7 @@ export default function AdminDashboard() {
                             Admin Dashboard
                         </h1>
                         <div className="flex items-center gap-4">
-                            <Badge variant="outline">
-                                School Administrator
-                            </Badge>
+                            <Badge variant="outline">Super Administrator</Badge>
                             <Avatar>
                                 <AvatarFallback>AD</AvatarFallback>
                             </Avatar>

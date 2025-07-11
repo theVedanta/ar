@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Eye, Users } from "lucide-react";
+import { Eye, User, Users } from "lucide-react";
 
 function SignUpForm() {
     const searchParams = useSearchParams();
@@ -44,12 +44,12 @@ function SignUpForm() {
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
             {/* Role Selection */}
-            <div className="space-y-3">
+            <div className="space-y-1">
                 <Label className="text-base font-medium">I am a:</Label>
                 <RadioGroup
                     value={role}
                     onValueChange={setRole}
-                    className="space-y-3"
+                    className="space-y-0"
                 >
                     <div className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50">
                         <RadioGroupItem value="student" id="student" />
@@ -66,6 +66,15 @@ function SignUpForm() {
                             <Users className="h-5 w-5 text-green-600" />
                             <Label htmlFor="scribe" className="cursor-pointer">
                                 Volunteer Scribe
+                            </Label>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50">
+                        <RadioGroupItem value="admin" id="admin" />
+                        <div className="flex items-center gap-2">
+                            <User className="h-5 w-5 text-red-600" />
+                            <Label htmlFor="admin" className="cursor-pointer">
+                                Administrator
                             </Label>
                         </div>
                     </div>
