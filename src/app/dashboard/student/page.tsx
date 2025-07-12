@@ -1,8 +1,6 @@
 "use client";
 
 import type React from "react";
-
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -14,15 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    Star,
-    Mail,
-    Phone,
-    MapPin,
-    Clock,
-    User,
-    AlertCircle,
-} from "lucide-react";
+import { Star, MapPin, Clock, User, AlertCircle } from "lucide-react";
 
 // Mock data for matched scribes
 const matchedScribes = [
@@ -74,31 +64,6 @@ const matchedScribes = [
 ];
 
 export default function StudentDashboard() {
-    const [requestStatus, setRequestStatus] = useState<{
-        [key: number]: string;
-    }>({});
-
-    const handleContactScribe = (scribeId: number) => {
-        setRequestStatus((prev) => ({ ...prev, [scribeId]: "pending" }));
-        // In a real app, this would send a notification/email
-        setTimeout(() => {
-            setRequestStatus((prev) => ({ ...prev, [scribeId]: "contacted" }));
-        }, 1000);
-    };
-
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case "pending":
-                return "bg-yellow-100 text-yellow-800";
-            case "contacted":
-                return "bg-green-100 text-green-800";
-            case "confirmed":
-                return "bg-blue-100 text-blue-800";
-            default:
-                return "bg-gray-100 text-gray-800";
-        }
-    };
-
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
