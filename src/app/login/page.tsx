@@ -35,13 +35,13 @@ export default function LoginPage() {
                     <Eye className="h-12 w-12 text-blue-600 mx-auto mb-4" />
                     <CardTitle className="text-2xl">Welcome Back</CardTitle>
                     <CardDescription>
-                        Sign in to your ScribeConnect account
+                        Sign in to your SubscribeScribe account
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="email">Email Address</Label>
+                            <Label htmlFor="email">Email Address *</Label>
                             <Input
                                 id="email"
                                 type="email"
@@ -51,7 +51,7 @@ export default function LoginPage() {
                             />
                         </div>
                         <div>
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">Password *</Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -67,12 +67,20 @@ export default function LoginPage() {
 
                     <div className="mt-6 text-center">
                         <p className="text-sm text-gray-600">
-                            &apos;t have an account?{" "}
+                            Don&apos;t have an account?{" "}
                             <Link
                                 href="/signup"
                                 className="text-blue-600 hover:underline"
                             >
                                 Sign up
+                            </Link>
+                        </p>
+                        <p className="text-sm text-gray-600 mt-2">
+                            <Link
+                                href="/forgot-password"
+                                className="text-blue-600 hover:underline"
+                            >
+                                Forgot password?
                             </Link>
                         </p>
                     </div>

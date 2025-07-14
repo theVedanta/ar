@@ -84,7 +84,7 @@ function SignUpForm() {
             {/* Contact Information */}
             <div className="space-y-4">
                 <div>
-                    <Label htmlFor="email">Email Address</Label>
+                    <Label htmlFor="email">Email Address *</Label>
                     <Input
                         id="email"
                         type="email"
@@ -94,7 +94,7 @@ function SignUpForm() {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="phone">Phone Number</Label>
+                    <Label htmlFor="phone">Phone Number *</Label>
                     <Input
                         id="phone"
                         type="tel"
@@ -104,7 +104,7 @@ function SignUpForm() {
                     />
                 </div>
                 <div>
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">Password *</Label>
                     <Input
                         id="password"
                         type="password"
@@ -130,7 +130,7 @@ export default function SignUpPage() {
                     <Eye className="h-12 w-12 text-blue-600 mx-auto mb-4" />
                     <CardTitle className="text-2xl">Create Account</CardTitle>
                     <CardDescription>
-                        Join ScribeConnect to get started
+                        Join SubscribeScribe to get started
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -145,6 +145,15 @@ export default function SignUpPage() {
                                 className="text-blue-600 hover:underline"
                             >
                                 Sign in
+                            </Link>
+                        </p>
+
+                        <p className="text-sm text-gray-600 mt-2">
+                            <Link
+                                href="/forgot-password"
+                                className="text-blue-600 hover:underline"
+                            >
+                                Forgot password?
                             </Link>
                         </p>
                     </div>

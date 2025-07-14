@@ -193,7 +193,7 @@ export default function HelpPage() {
                                             Email Support
                                         </p>
                                         <p className="text-sm text-gray-600">
-                                            support@scribeconnect.com
+                                            support@subscribescribe.com
                                         </p>
                                     </div>
                                 </div>

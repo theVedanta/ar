@@ -20,23 +20,8 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import {
-    Users,
-    BookOpen,
-    CheckCircle,
-    AlertTriangle,
-    Star,
-    Search,
-    Filter,
-} from "lucide-react";
-
-// Mock data for admin dashboard
-const stats = {
-    totalStudents: 32,
-    totalScribes: 14,
-    activeMatches: 6,
-    pendingRequests: 3,
-};
+import { Star, Search, Filter } from "lucide-react";
+import Stats from "@/components/stats";
 
 const allMatches = [
     {
@@ -154,61 +139,7 @@ export default function AdminDashboard() {
             </header>
 
             <div className="container mx-auto px-4 py-8">
-                {/* Stats Overview */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Total Students
-                            </CardTitle>
-                            <Users className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {stats.totalStudents}
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Total Scribes
-                            </CardTitle>
-                            <BookOpen className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {stats.totalScribes}
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Active Matches
-                            </CardTitle>
-                            <CheckCircle className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {stats.activeMatches}
-                            </div>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">
-                                Pending Requests
-                            </CardTitle>
-                            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-2xl font-bold">
-                                {stats.pendingRequests}
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
+                <Stats />
 
                 <Tabs defaultValue="matches" className="space-y-6">
                     <TabsList>

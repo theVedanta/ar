@@ -6,10 +6,10 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Users, BookOpen, Star, Eye } from "lucide-react";
+import { Users, BookOpen, Star, Eye, ArrowRight } from "lucide-react";
 import WorldMap from "@/components/ui/world-map";
 import { BackgroundBeams } from "@/components/ui/background-beams";
-import { Input } from "@/components/ui/input";
+import Stats from "@/components/stats";
 
 export default function HomePage() {
     return (
@@ -20,7 +20,7 @@ export default function HomePage() {
                     <div className="flex items-center gap-3">
                         <Eye className="h-8 w-8 text-blue-600" />
                         <h1 className="text-xl font-extrabold text-gray-800">
-                            ScribeConnect
+                            SubscribeScribe
                         </h1>
                     </div>
                     <div className="flex gap-3">
@@ -41,10 +41,8 @@ export default function HomePage() {
                         <span className="text-blue-600">Students</span> and{" "}
                         <span className="text-blue-600">Volunteer Scribes</span>
                     </h2>
-                    <p className="text-sm md:text-lg text-neutral-500 max-w-2xl mx-auto py-4">
-                        Break free from traditional boundaries. Work from
-                        anywhere, at the comfort of your own studio apartment.
-                        Perfect for Nomads and Travellers.
+                    <p className="text-xl font-semibold md:text-2xl text-neutral-500 max-w-2xl mx-auto py-4">
+                        Become the pen behind their vision
                     </p>
                 </div>
                 <WorldMap
@@ -92,7 +90,7 @@ export default function HomePage() {
                         <span className="text-blue-600">Volunteer Scribes</span>
                     </h2>
                     <p className="text-lg text-gray-700 mb-10 max-w-2xl mx-auto">
-                        ScribeConnect is dedicated to empowering visually
+                        SubscribeScribe is dedicated to empowering visually
                         impaired students by connecting them with compassionate
                         volunteer scribes. Together, we make education
                         accessible for everyone.
@@ -112,11 +110,80 @@ export default function HomePage() {
                 </div>
             </section> */}
 
+            <section className="px-20">
+                <Stats />
+            </section>
+
+            <div className="py-20 w-full bg-neutral-950 relative flex items-center justify-center antialiased">
+                <div className="relative z-10 flex flex-col md:flex-row items-center justify-center w-full mx-auto p-4">
+                    <div className="flex-1 flex flex-col items-center md:items-start justify-center md:pl-12">
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-white font-sans font-bold leading-none mb-8 text-center md:text-left drop-shadow-lg">
+                            About SubscribeScribe
+                        </h1>
+                        <div className="max-w-3xl text-lg md:text-xl text-neutral-200 mb-8 text-center md:text-left space-y-6">
+                            <p>
+                                SubscribeScribe is dedicated to bridging the gap
+                                between visually impaired students and
+                                compassionate volunteer scribes. Our mission is
+                                to make education accessible, inclusive, and
+                                empowering for everyone, regardless of visual
+                                ability.
+                            </p>
+                            <p>
+                                We connect students who need assistance with
+                                reading, writing, and exam-taking to trained
+                                scribes from around the world. By leveraging
+                                smart matching algorithms, we ensure that every
+                                student is paired with a scribe who understands
+                                their academic needs, language preferences, and
+                                accessibility requirements.
+                            </p>
+                            <p>
+                                Our platform is built with accessibility at its
+                                core, supporting screen readers, keyboard
+                                navigation, and providing resources for both
+                                students and volunteers. Every scribe is vetted
+                                for expertise and trained in exam protocols,
+                                ensuring a safe, reliable, and high-quality
+                                experience.
+                            </p>
+                            <p>
+                                Whether you are a student seeking support or a
+                                volunteer wanting to make a difference,
+                                SubscribeScribe is here to empower your journey.
+                                Together, we are transforming education—one
+                                session, one connection, one story at a time.
+                            </p>
+                        </div>
+                        <div className="flex gap-4">
+                            <Link href="/signup?role=student">
+                                <Button variant="outline">
+                                    I Need a Scribe
+                                </Button>
+                            </Link>
+                            <Link href="/signup?role=scribe">
+                                <Button variant="link" className="text-white">
+                                    I Want to Volunteer
+                                    <ArrowRight size={28} className="ml-2" />
+                                </Button>
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="flex-1 flex items-center justify-center md:pl-12 mt-10 md:mt-0">
+                        <img
+                            src="https://images.unsplash.com/photo-1632753133168-fbd6a64c796b?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                            alt="A visually impaired person being helped by a scribe"
+                            className="rounded-xl shadow-2xl object-cover w-full max-w-md h-auto"
+                        />
+                    </div>
+                </div>
+            </div>
+
             {/* Features */}
             <section className="py-24 px-4 bg-gray-50">
                 <div className="container mx-auto">
                     <h3 className="text-4xl md:text-5xl font-extrabold text-center mb-16 text-gray-800 tracking-tight">
-                        How ScribeConnect Empowers You
+                        How SubscribeScribe Empowers You
                     </h3>
                     <div className="grid md:grid-cols-4 gap-10">
                         <Card className="shadow-xl border border-gray-200 hover:shadow-2xl transition-shadow duration-200 bg-white">
@@ -201,19 +268,17 @@ export default function HomePage() {
                     {/* Right Side: Text and Newsletter */}
                     <div className="flex-1 flex flex-col items-center md:items-start justify-center md:pl-12">
                         <h1 className="text-[80px] md:text-[120px] lg:text-[160px] xl:text-[200px] text-white font-sans font-bold leading-none mb-2 text-center md:text-left drop-shadow-lg">
-                            JOIN US.
+                            JOIN US...
                         </h1>
-                        <form className="flex flex-col sm:flex-row items-center md:items-start gap-3 mt-2 w-full max-w-md">
-                            <Input
-                                type="email"
-                                placeholder="Enter your email"
-                                className="border border-gray-300 bg-neutral-900 text-white placeholder:text-neutral-400 focus:border-blue-500 w-96"
-                                required
-                            />
-                            <Button type="submit" variant="outline">
-                                Subscribe
+                        <Link href="/signup?role=scribe">
+                            <Button
+                                variant="link"
+                                className="text-2xl md:text-4xl px-12 py-12 font-extrabold shadow-2xl text-white rounded-3xl"
+                            >
+                                Get Started
+                                <ArrowRight size={36} className="text-3xl" />
                             </Button>
-                        </form>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -222,8 +287,8 @@ export default function HomePage() {
             <footer className="bg-neutral-950 text-white py-10 px-4">
                 <div className="container mx-auto text-center">
                     <p className="text-sm">
-                        &copy; 2024 ScribeConnect. Empowering education through
-                        accessibility and inclusion.
+                        &copy; 2024 SubscribeScribe. Empowering education
+                        through accessibility and inclusion.
                     </p>
                 </div>
             </footer>
