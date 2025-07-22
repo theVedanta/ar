@@ -10,6 +10,7 @@ import { Users, BookOpen, Star, Eye, ArrowRight } from "lucide-react";
 import WorldMap from "@/components/ui/world-map";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import Stats from "@/components/stats";
+import { SignedIn, SignedOut, UserButton, SignOutButton } from "@clerk/nextjs";
 
 export default function HomePage() {
     return (
@@ -24,12 +25,20 @@ export default function HomePage() {
                         </h1>
                     </div>
                     <div className="flex gap-3">
-                        <Button variant="outline" asChild>
-                            <Link href="/login">Login</Link>
-                        </Button>
-                        <Button asChild>
-                            <Link href="/signup">Sign Up</Link>
-                        </Button>
+                        <SignedOut>
+                            <Button variant="outline" asChild>
+                                <Link href="/login">Login</Link>
+                            </Button>
+                            <Button asChild>
+                                <Link href="/signup">Sign Up</Link>
+                            </Button>
+                        </SignedOut>
+                        <SignedIn>
+                            <SignOutButton>
+                                <Button variant="outline">Logout</Button>
+                            </SignOutButton>
+                            <UserButton afterSignOutUrl="/" />
+                        </SignedIn>
                     </div>
                 </div>
             </header>
@@ -81,35 +90,6 @@ export default function HomePage() {
                 />
             </div>
 
-            {/* Hero Section */}
-            {/* <section className="py-24 px-4">
-                <div className="container mx-auto text-center">
-                    <h2 className="text-5xl font-extrabold text-gray-800 mb-8">
-                        Bridging the Gap Between{" "}
-                        <span className="text-blue-600">Students</span> and{" "}
-                        <span className="text-blue-600">Volunteer Scribes</span>
-                    </h2>
-                    <p className="text-lg text-gray-700 mb-10 max-w-2xl mx-auto">
-                        SubscribeScribe is dedicated to empowering visually
-                        impaired students by connecting them with compassionate
-                        volunteer scribes. Together, we make education
-                        accessible for everyone.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Button size="lg" asChild>
-                            <Link href="/signup?role=student">
-                                I Need a Scribe
-                            </Link>
-                        </Button>
-                        <Button size="lg" variant="outline" asChild>
-                            <Link href="/signup?role=scribe">
-                                I Want to Help
-                            </Link>
-                        </Button>
-                    </div>
-                </div>
-            </section> */}
-
             <section className="px-20">
                 <Stats />
             </section>
@@ -117,10 +97,10 @@ export default function HomePage() {
             <div className="py-20 w-full bg-neutral-950 relative flex items-center justify-center antialiased">
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-center w-full mx-auto p-4">
                     <div className="flex-1 flex flex-col items-center md:items-start justify-center md:pl-12">
-                        <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-white font-sans font-bold leading-none mb-8 text-center md:text-left drop-shadow-lg">
+                        <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-white font-sans font-bold leading-none mb-8 text-center md:text-justify drop-shadow-lg">
                             About SubscribeScribe
                         </h1>
-                        <div className="max-w-3xl text-lg md:text-xl text-neutral-200 mb-8 text-center md:text-left space-y-6">
+                        <div className="max-w-3xl text-lg md:text-xl text-neutral-200 mb-8 text-center md:text-justify space-y-6">
                             <p>
                                 SubscribeScribe is dedicated to bridging the gap
                                 between visually impaired students and
@@ -267,7 +247,7 @@ export default function HomePage() {
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-center w-full mx-auto p-4">
                     {/* Right Side: Text and Newsletter */}
                     <div className="flex-1 flex flex-col items-center md:items-start justify-center md:pl-12">
-                        <h1 className="text-[80px] md:text-[120px] lg:text-[160px] xl:text-[200px] text-white font-sans font-bold leading-none mb-2 text-center md:text-left drop-shadow-lg">
+                        <h1 className="text-[80px] md:text-[120px] lg:text-[160px] xl:text-[200px] text-white font-sans font-bold leading-none mb-2 text-center md:text-justify drop-shadow-lg">
                             JOIN US...
                         </h1>
                         <Link href="/signup?role=scribe">
@@ -287,7 +267,7 @@ export default function HomePage() {
             <footer className="bg-neutral-950 text-white py-10 px-4">
                 <div className="container mx-auto text-center">
                     <p className="text-sm">
-                        &copy; 2024 SubscribeScribe. Empowering education
+                        &copy; 2025 SubscribeScribe. Empowering education
                         through accessibility and inclusion.
                     </p>
                 </div>
