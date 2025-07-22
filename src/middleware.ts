@@ -1,6 +1,36 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-export default clerkMiddleware();
+const isPublicRoute = createRouteMatcher([
+    "/",
+    "/login(.*)",
+    "/signup(.*)",
+    "/api/webhooks(.*)",
+]);
+
+const isAuthRoute = createRouteMatcher(["/login(.*)", "/signup(.*)"]);
+
+export default clerkMiddleware(async (auth, req) => {
+    const { userId } = await auth();
+    const currentPath = req.nextUrl.pathname;
+
+    // If user is not authenticated and trying to access protected route
+    if (!userId && !isPublicRoute(req)) {
+        return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    // If user is authenticated and on auth pages, redirect to choose-role
+    if (userId && isAuthRoute(req)) {
+        return NextResponse.redirect(new URL("/choose-role", req.url));
+    }
+
+    // If user is authenticated and on home page, redirect to choose-role
+    if (userId && currentPath === "/") {
+        return NextResponse.redirect(new URL("/choose-role", req.url));
+    }
+
+    return NextResponse.next();
+});
 
 export const config = {
     matcher: [
