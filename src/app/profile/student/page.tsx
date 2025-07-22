@@ -38,9 +38,12 @@ export default function StudentProfilePage() {
         class: "",
         age: "",
         subjects: [] as string[],
+        otherSubject: "",
         examName: "",
+        otherExamName: "",
         examType: [] as string[],
         language: [] as string[],
+        otherLanguage: "",
         genderPreference: "",
         examDate: "",
         examTime: "",
@@ -252,6 +255,32 @@ export default function StudentProfilePage() {
                                             >
                                                 {subject}
                                             </Label>
+
+                                            {subject === "Other" &&
+                                                formData.subjects.includes(
+                                                    "Other"
+                                                ) && (
+                                                    <Input
+                                                        className="ml-2"
+                                                        placeholder="Please specify"
+                                                        value={
+                                                            // Store the custom subject in formData as additionalComments or a new field if needed
+                                                            formData.otherSubject ||
+                                                            ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            setFormData(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    otherSubject:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
+                                                        }
+                                                        required
+                                                    />
+                                                )}
                                         </div>
                                     ))}
                                 </div>
@@ -306,6 +335,30 @@ export default function StudentProfilePage() {
                                                 >
                                                     {type.label}
                                                 </Label>
+                                                {type.value === "other" &&
+                                                    formData.examType.includes(
+                                                        "other"
+                                                    ) && (
+                                                        <Input
+                                                            className="ml-2"
+                                                            placeholder="Please specify"
+                                                            value={
+                                                                formData.otherExamName
+                                                            }
+                                                            onChange={(e) =>
+                                                                setFormData(
+                                                                    (prev) => ({
+                                                                        ...prev,
+                                                                        otherExamName:
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                    })
+                                                                )
+                                                            }
+                                                            required
+                                                        />
+                                                    )}
                                             </div>
                                         ))}
                                     </div>
@@ -341,6 +394,33 @@ export default function StudentProfilePage() {
                                                     >
                                                         {lang.label}
                                                     </Label>
+                                                    {lang.value ===
+                                                        "regional" &&
+                                                        formData.language.includes(
+                                                            "regional"
+                                                        ) && (
+                                                            <Input
+                                                                className="ml-2"
+                                                                placeholder="Please specify"
+                                                                value={
+                                                                    formData.otherLanguage
+                                                                }
+                                                                onChange={(e) =>
+                                                                    setFormData(
+                                                                        (
+                                                                            prev
+                                                                        ) => ({
+                                                                            ...prev,
+                                                                            otherLanguage:
+                                                                                e
+                                                                                    .target
+                                                                                    .value,
+                                                                        })
+                                                                    )
+                                                                }
+                                                                required
+                                                            />
+                                                        )}
                                                 </div>
                                             ))}
                                         </div>

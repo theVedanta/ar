@@ -49,6 +49,8 @@ export default function ScribeProfilePage() {
         },
         locationPreference: "",
         ethicsAgreement: false,
+        otherExamType: "",
+        otherSubject: "",
     });
 
     const subjects = [
@@ -302,6 +304,31 @@ export default function ScribeProfilePage() {
                                             >
                                                 {subject}
                                             </Label>
+
+                                            {subject === "Other" &&
+                                                formData.subjects.includes(
+                                                    "Other"
+                                                ) && (
+                                                    <Input
+                                                        className="ml-2"
+                                                        placeholder="Please specify"
+                                                        value={
+                                                            formData.otherSubject ||
+                                                            ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            setFormData(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    otherSubject:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
+                                                        }
+                                                        required
+                                                    />
+                                                )}
                                         </div>
                                     ))}
                                 </div>
@@ -381,6 +408,32 @@ export default function ScribeProfilePage() {
                                                 >
                                                     {examType}
                                                 </Label>
+                                                {examType ===
+                                                    "Other Competitive Exams" &&
+                                                    formData.examTypes.includes(
+                                                        "Other Competitive Exams"
+                                                    ) && (
+                                                        <Input
+                                                            className="ml-2"
+                                                            placeholder="Please specify"
+                                                            value={
+                                                                formData.otherExamType ||
+                                                                ""
+                                                            }
+                                                            onChange={(e) =>
+                                                                setFormData(
+                                                                    (prev) => ({
+                                                                        ...prev,
+                                                                        otherExamType:
+                                                                            e
+                                                                                .target
+                                                                                .value,
+                                                                    })
+                                                                )
+                                                            }
+                                                            required
+                                                        />
+                                                    )}
                                             </div>
                                         ))}
                                     </div>
