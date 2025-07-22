@@ -3,6 +3,7 @@
 import type React from "react";
 
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -23,8 +24,15 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CalendarDays, MapPin } from "lucide-react";
+import { useUsers } from "@/hooks/api/useUsers";
 
 export default function StudentProfilePage() {
+    const { user } = useUser();
+    const {
+        createUserIfNotExists,
+        loading: userLoading,
+        error: userError,
+    } = useUsers();
     const [formData, setFormData] = useState({
         name: "",
         class: "",
@@ -116,11 +124,41 @@ export default function StudentProfilePage() {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Student profile:", formData);
-        // Redirect to dashboard
-        window.location.href = "/dashboard/student";
+
+        if (!user?.id) {
+            console.error("User authentication required");
+            return;
+        }
+
+        try {
+            // Create user record if it doesn't exist
+            await createUserIfNotExists({
+                userId: user.id,
+                name: user.fullName || user.firstName || "",
+                role: "student",
+                class: formData.class,
+                subjects: formData.subjects,
+                examDetails: {
+                    examName: formData.examName,
+                    examType: formData.examType,
+                    examDate: formData.examDate,
+                    examTime: formData.examTime,
+                    location: formData.location,
+                    language: formData.language,
+                    genderPreference: formData.genderPreference,
+                    additionalComments: formData.additionalComments,
+                },
+                disability: { type: "visual" },
+            });
+
+            console.log("Student profile created successfully");
+            // Redirect to dashboard
+            window.location.href = "/dashboard/student";
+        } catch (error) {
+            console.error("Error creating student profile:", error);
+        }
     };
 
     return (
@@ -419,9 +457,21 @@ export default function StudentProfilePage() {
                                 />
                             </div>
 
-                            <Button type="submit" className="w-full">
-                                Complete Profile & Find Scribes
+                            <Button
+                                type="submit"
+                                className="w-full"
+                                disabled={userLoading}
+                            >
+                                {userLoading
+                                    ? "Creating Profile..."
+                                    : "Complete Profile & Find Scribes"}
                             </Button>
+
+                            {userError && (
+                                <div className="text-red-600 text-sm mt-2">
+                                    Error: {userError}
+                                </div>
+                            )}
                         </form>
                     </CardContent>
                 </Card>

@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -12,111 +14,172 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { Star, Search, Filter } from "lucide-react";
-import Stats from "@/components/stats";
-
-const allMatches = [
-    {
-        id: 1,
-        student: {
-            name: "Arjun Mehta",
-            class: "12th",
-            subjects: ["Math", "Physics"],
-        },
-        scribe: { name: "Priya Sharma", rating: 4.8, experience: "2 years" },
-        examDate: "2024-12-20",
-        status: "confirmed",
-        matchScore: 95,
-    },
-    {
-        id: 2,
-        student: {
-            name: "Sneha Gupta",
-            class: "11th",
-            subjects: ["Chemistry", "Biology"],
-        },
-        scribe: { name: "Rahul Kumar", rating: 4.6, experience: "3 years" },
-        examDate: "2024-12-18",
-        status: "pending",
-        matchScore: 88,
-    },
-    {
-        id: 3,
-        student: {
-            name: "Rohit Singh",
-            class: "12th",
-            subjects: ["English", "History"],
-        },
-        scribe: null,
-        examDate: "2024-12-22",
-        status: "unmatched",
-        matchScore: 0,
-    },
-];
-
-const feedbackData = [
-    {
-        id: 1,
-        studentName: "Kavya Patel",
-        scribeName: "Anjali Sharma",
-        rating: 5,
-        feedback: "Excellent support, very patient and understanding.",
-        date: "2024-11-15",
-    },
-    {
-        id: 2,
-        studentName: "Amit Kumar",
-        scribeName: "Ravi Gupta",
-        rating: 4,
-        feedback: "Good handwriting, arrived on time.",
-        date: "2024-11-12",
-    },
-];
+    Star,
+    Search,
+    Filter,
+    Clock,
+    AlertCircle,
+    XCircle,
+} from "lucide-react";
+import ScribeRequestManager from "@/components/admin/ScribeRequestManager";
+import { useScribeRequests } from "@/hooks/api/useScribeRequests";
+import { useAdminStatus } from "@/hooks/api/useAdminStatus";
 
 export default function AdminDashboard() {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [statusFilter, setStatusFilter] = useState("all");
+    const { user } = useUser();
+    const router = useRouter();
+    const { adminStatus, loading: statusLoading } = useAdminStatus();
 
-    const filteredMatches = allMatches.filter((match) => {
-        const matchesSearch =
-            match.student.name
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ||
-            (match.scribe?.name
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ??
-                false);
-        const matchesStatus =
-            statusFilter === "all" || match.status === statusFilter;
-        return matchesSearch && matchesStatus;
+    // This should come from authentication/session
+    const adminId = user?.id || "demo-admin-id";
+
+    const { requests } = useScribeRequests({
+        adminId,
+        autoFetch: adminStatus?.isApproved || false,
     });
 
-    const handleManualAssign = (matchId: number) => {
-        // In a real app, this would open a modal to select a scribe
-        console.log("Manual assign for match:", matchId);
+    const stats = {
+        totalStudents: 42,
+        totalScribes: 28,
+        activeMatches: requests.filter((r) => r.status === "approved").length,
+        pendingRequests: requests.filter((r) => r.status === "pending").length,
     };
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case "confirmed":
-                return "bg-green-100 text-green-800";
-            case "pending":
-                return "bg-yellow-100 text-yellow-800";
-            case "unmatched":
-                return "bg-red-100 text-red-800";
-            default:
-                return "bg-gray-100 text-gray-800";
-        }
-    };
+    // Show loading state while checking admin status
+    if (statusLoading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <Card className="w-full max-w-md">
+                    <CardContent className="pt-6 text-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <p className="text-gray-600">Checking your access...</p>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
 
+    // Show pending approval state
+    if (adminStatus?.isPending) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+                <Card className="w-full max-w-md">
+                    <CardContent className="pt-6 text-center">
+                        <Clock className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+                        <h2 className="text-2xl font-bold mb-2">
+                            Access Pending
+                        </h2>
+                        <p className="text-gray-600 mb-4">
+                            Your admin access request is under review by a super
+                            administrator.
+                        </p>
+                        {adminStatus.schoolName && (
+                            <p className="text-sm text-gray-500 mb-4">
+                                School: {adminStatus.schoolName}
+                            </p>
+                        )}
+                        <Badge variant="secondary" className="mb-6">
+                            <Clock className="h-4 w-4 mr-1" />
+                            Pending Review
+                        </Badge>
+                        <div className="space-y-2">
+                            <Button
+                                variant="outline"
+                                onClick={() => router.push("/")}
+                                className="w-full"
+                            >
+                                Return Home
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
+    // Show rejected state
+    if (adminStatus?.isRejected) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 to-rose-100 p-4">
+                <Card className="w-full max-w-md">
+                    <CardContent className="pt-6 text-center">
+                        <XCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                        <h2 className="text-2xl font-bold mb-2">
+                            Access Denied
+                        </h2>
+                        <p className="text-gray-600 mb-4">
+                            Your admin access request has been rejected.
+                        </p>
+                        {adminStatus.rejectionReason && (
+                            <div className="bg-red-50 p-3 rounded-lg mb-4">
+                                <p className="text-sm text-red-700">
+                                    <strong>Reason:</strong>{" "}
+                                    {adminStatus.rejectionReason}
+                                </p>
+                            </div>
+                        )}
+                        <div className="space-y-2">
+                            <Button
+                                onClick={() => router.push("/profile/admin")}
+                                className="w-full"
+                            >
+                                Submit New Request
+                            </Button>
+                            <Button
+                                variant="outline"
+                                onClick={() => router.push("/")}
+                                className="w-full"
+                            >
+                                Return Home
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
+    // Show request admin access state for users who haven't requested yet
+    if (
+        !adminStatus?.isApproved &&
+        !adminStatus?.isPending &&
+        !adminStatus?.isRejected
+    ) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+                <Card className="w-full max-w-md">
+                    <CardContent className="pt-6 text-center">
+                        <AlertCircle className="h-12 w-12 text-blue-500 mx-auto mb-4" />
+                        <h2 className="text-2xl font-bold mb-2">
+                            Admin Access Required
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                            You need to request admin access from a super
+                            administrator to use this dashboard.
+                        </p>
+                        <div className="space-y-2">
+                            <Button
+                                onClick={() => router.push("/profile/admin")}
+                                className="w-full"
+                            >
+                                Request Admin Access
+                            </Button>
+                            <Button
+                                variant="outline"
+                                onClick={() => router.push("/")}
+                                className="w-full"
+                            >
+                                Return Home
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
+        );
+    }
+
+    // Show full admin dashboard only if approved
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header */}
@@ -139,190 +202,60 @@ export default function AdminDashboard() {
             </header>
 
             <div className="container mx-auto px-4 py-8">
-                <Stats />
+                {/* Stats Overview */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <Card>
+                        <CardContent className="pt-6">
+                            <div className="text-2xl font-bold">
+                                {stats.totalStudents}
+                            </div>
+                            <p className="text-sm text-gray-600">
+                                Total Students
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="pt-6">
+                            <div className="text-2xl font-bold">
+                                {stats.totalScribes}
+                            </div>
+                            <p className="text-sm text-gray-600">
+                                Total Scribes
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="pt-6">
+                            <div className="text-2xl font-bold">
+                                {stats.activeMatches}
+                            </div>
+                            <p className="text-sm text-gray-600">
+                                Active Matches
+                            </p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardContent className="pt-6">
+                            <div className="text-2xl font-bold">
+                                {stats.pendingRequests}
+                            </div>
+                            <p className="text-sm text-gray-600">
+                                Pending Requests
+                            </p>
+                        </CardContent>
+                    </Card>
+                </div>
 
-                <Tabs defaultValue="matches" className="space-y-6">
+                <Tabs defaultValue="scribe-requests" className="space-y-6">
                     <TabsList>
-                        <TabsTrigger value="matches">All Matches</TabsTrigger>
-                        <TabsTrigger value="feedback">Feedback</TabsTrigger>
+                        <TabsTrigger value="scribe-requests">
+                            Scribe Requests
+                        </TabsTrigger>
                         <TabsTrigger value="reports">Reports</TabsTrigger>
                     </TabsList>
 
-                    <TabsContent value="matches" className="space-y-6">
-                        <div className="flex justify-between items-center">
-                            <h2 className="text-xl font-semibold">
-                                Manage Matches
-                            </h2>
-                            <div className="flex gap-2">
-                                <div className="relative">
-                                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                                    <Input
-                                        placeholder="Search students or scribes..."
-                                        value={searchTerm}
-                                        onChange={(e) =>
-                                            setSearchTerm(e.target.value)
-                                        }
-                                        className="pl-8 w-64"
-                                    />
-                                </div>
-                                <Select
-                                    value={statusFilter}
-                                    onValueChange={setStatusFilter}
-                                >
-                                    <SelectTrigger className="w-32">
-                                        <Filter className="h-4 w-4 mr-2" />
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">
-                                            All Status
-                                        </SelectItem>
-                                        <SelectItem value="confirmed">
-                                            Confirmed
-                                        </SelectItem>
-                                        <SelectItem value="pending">
-                                            Pending
-                                        </SelectItem>
-                                        <SelectItem value="unmatched">
-                                            Unmatched
-                                        </SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        <div className="grid gap-6">
-                            {filteredMatches.map((match) => (
-                                <Card key={match.id}>
-                                    <CardHeader>
-                                        <div className="flex justify-between items-start">
-                                            <div>
-                                                <CardTitle className="text-lg">
-                                                    {match.student.name}{" "}
-                                                    (Student) →{" "}
-                                                    {match.scribe?.name ||
-                                                        "Unassigned"}{" "}
-                                                    (Scribe)
-                                                </CardTitle>
-                                                <CardDescription>
-                                                    {match.student.class} •{" "}
-                                                    {match.student.subjects.join(
-                                                        ", "
-                                                    )}{" "}
-                                                    • Exam: {match.examDate}
-                                                </CardDescription>
-                                            </div>
-                                            <div className="text-right">
-                                                <Badge
-                                                    className={getStatusColor(
-                                                        match.status
-                                                    )}
-                                                >
-                                                    {match.status
-                                                        .charAt(0)
-                                                        .toUpperCase() +
-                                                        match.status.slice(1)}
-                                                </Badge>
-                                                {match.matchScore > 0 && (
-                                                    <p className="text-sm text-gray-500 mt-1">
-                                                        {match.matchScore}%
-                                                        match
-                                                    </p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="flex justify-between items-center">
-                                            <div className="space-y-1">
-                                                {match.scribe && (
-                                                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                                        <span>
-                                                            {
-                                                                match.scribe
-                                                                    .rating
-                                                            }
-                                                        </span>
-                                                        <span>•</span>
-                                                        <span>
-                                                            {
-                                                                match.scribe
-                                                                    .experience
-                                                            }
-                                                        </span>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="flex gap-2">
-                                                {match.status ===
-                                                    "unmatched" && (
-                                                    <Button
-                                                        onClick={() =>
-                                                            handleManualAssign(
-                                                                match.id
-                                                            )
-                                                        }
-                                                    >
-                                                        Assign Manually
-                                                    </Button>
-                                                )}
-                                                {match.status === "pending" && (
-                                                    <Button variant="outline">
-                                                        Approve Match
-                                                    </Button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
-                    </TabsContent>
-
-                    <TabsContent value="feedback" className="space-y-6">
-                        <h2 className="text-xl font-semibold">
-                            Feedback & Ratings
-                        </h2>
-                        <div className="grid gap-4">
-                            {feedbackData.map((feedback) => (
-                                <Card key={feedback.id}>
-                                    <CardContent className="pt-6">
-                                        <div className="space-y-3">
-                                            <div className="flex justify-between items-start">
-                                                <div>
-                                                    <h4 className="font-medium">
-                                                        {feedback.studentName} →{" "}
-                                                        {feedback.scribeName}
-                                                    </h4>
-                                                    <p className="text-sm text-gray-500">
-                                                        {feedback.date}
-                                                    </p>
-                                                </div>
-                                                <div className="flex items-center gap-1">
-                                                    {[...Array(5)].map(
-                                                        (_, i) => (
-                                                            <Star
-                                                                key={i}
-                                                                className={`h-4 w-4 ${
-                                                                    i <
-                                                                    feedback.rating
-                                                                        ? "fill-yellow-400 text-yellow-400"
-                                                                        : "text-gray-300"
-                                                                }`}
-                                                            />
-                                                        )
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <p className="text-sm text-gray-700">
-                                                &quot;{feedback.feedback}&quot;
-                                            </p>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
+                    <TabsContent value="scribe-requests" className="space-y-6">
+                        <ScribeRequestManager adminId={adminId} />
                     </TabsContent>
 
                     <TabsContent value="reports" className="space-y-6">

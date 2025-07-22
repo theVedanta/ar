@@ -3,6 +3,7 @@
 import type React from "react";
 
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -23,8 +24,15 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Upload, FileText } from "lucide-react";
+import { useUsers } from "@/hooks/api/useUsers";
 
 export default function ScribeProfilePage() {
+    const { user } = useUser();
+    const {
+        createUserIfNotExists,
+        loading: userLoading,
+        error: userError,
+    } = useUsers();
     const [formData, setFormData] = useState({
         name: "",
         class: "",
@@ -142,11 +150,36 @@ export default function ScribeProfilePage() {
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Scribe profile:", formData);
-        // Redirect to dashboard
-        window.location.href = "/dashboard/scribe";
+
+        if (!user?.id) {
+            console.error("User authentication required");
+            return;
+        }
+
+        try {
+            // Create user record if it doesn't exist
+            await createUserIfNotExists({
+                userId: user.id,
+                name: user.fullName || user.firstName || "",
+                role: "scribe",
+                subjects: formData.subjects,
+                experience: "0 years", // Default experience
+                examTypes: formData.examTypes,
+                location: formData.locationPreference,
+                language: [formData.language],
+                availability: "available",
+                gender: formData.gender,
+                age: parseInt(formData.age) || 18,
+            });
+
+            console.log("Scribe profile created successfully");
+            // Redirect to dashboard
+            window.location.href = "/dashboard/scribe";
+        } catch (error) {
+            console.error("Error creating scribe profile:", error);
+        }
     };
 
     return (
@@ -551,10 +584,20 @@ export default function ScribeProfilePage() {
                             <Button
                                 type="submit"
                                 className="w-full"
-                                disabled={!formData.ethicsAgreement}
+                                disabled={
+                                    !formData.ethicsAgreement || userLoading
+                                }
                             >
-                                Complete Profile & Start Helping
+                                {userLoading
+                                    ? "Creating Profile..."
+                                    : "Complete Profile & Start Helping"}
                             </Button>
+
+                            {userError && (
+                                <div className="text-red-600 text-sm mt-2">
+                                    Error: {userError}
+                                </div>
+                            )}
                         </form>
                     </CardContent>
                 </Card>

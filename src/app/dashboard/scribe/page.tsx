@@ -24,84 +24,22 @@ import {
     XCircle,
     AlertCircle,
 } from "lucide-react";
-
-// Mock data for student requests
-const studentRequests = [
-    {
-        id: 1,
-        name: "Arjun Mehta",
-        age: 17,
-        class: "12th Grade",
-        subjects: ["Mathematics", "Physics"],
-        examName: "CBSE Board Exam",
-        examType: "Descriptive",
-        examDate: "2024-12-20",
-        examTime: "10:00 AM",
-        location: "Delhi Public School, Sector 12, Delhi",
-        language: "English",
-        genderPreference: "No Preference",
-        matchScore: 95,
-        status: "pending",
-        requestedAt: "2 hours ago",
-    },
-    {
-        id: 2,
-        name: "Sneha Gupta",
-        age: 16,
-        class: "11th Grade",
-        subjects: ["Chemistry", "Biology"],
-        examName: "School Final Exam",
-        examType: "MCQ + Descriptive",
-        examDate: "2024-12-18",
-        examTime: "2:00 PM",
-        location: "Modern School, CP, Delhi",
-        language: "English",
-        genderPreference: "Female",
-        matchScore: 88,
-        status: "pending",
-        requestedAt: "1 day ago",
-    },
-];
-
-const upcomingAssignments = [
-    {
-        id: 1,
-        studentName: "Rohit Sharma",
-        subject: "Mathematics",
-        examDate: "2024-12-15",
-        examTime: "9:00 AM",
-        location: "St. Mary's School, Delhi",
-        status: "confirmed",
-    },
-    {
-        id: 2,
-        studentName: "Kavya Patel",
-        subject: "Physics",
-        examDate: "2024-12-22",
-        examTime: "11:00 AM",
-        location: "DPS Vasant Kunj, Delhi",
-        status: "confirmed",
-    },
-];
+import { useScribeRequests } from "@/hooks/api/useScribeRequests";
+import { useMatches } from "@/hooks/api/useMatches";
 
 export default function ScribeDashboard() {
-    const [requests, setRequests] = useState(studentRequests);
+    // This should come from authentication/session
+    const scribeId = "demo-scribe-id";
 
-    const handleRequestAction = (
-        requestId: number,
-        action: "accept" | "decline"
-    ) => {
-        setRequests((prev) =>
-            prev.map((req) =>
-                req.id === requestId
-                    ? {
-                          ...req,
-                          status: action === "accept" ? "accepted" : "declined",
-                      }
-                    : req
-            )
-        );
-    };
+    const { requests: scribeRequests, loading: requestsLoading } =
+        useScribeRequests({
+            autoFetch: false,
+        });
+
+    const { matches, loading: matchesLoading } = useMatches({
+        scribeId,
+        autoFetch: true,
+    });
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -157,217 +95,255 @@ export default function ScribeDashboard() {
                     <TabsContent value="requests" className="space-y-6">
                         <div className="flex justify-between items-center">
                             <h2 className="text-xl font-semibold">
-                                Students Needing Help
+                                Student Match Requests
                             </h2>
                             <Badge variant="secondary">
                                 {
-                                    requests.filter(
-                                        (r) => r.status === "pending"
+                                    scribeRequests.filter(
+                                        (r) => r.scribeId === scribeId
                                     ).length
                                 }{" "}
-                                new requests
+                                requests
                             </Badge>
                         </div>
 
-                        <div className="grid gap-6">
-                            {requests.map((request) => (
-                                <Card
-                                    key={request.id}
-                                    className="hover:shadow-md transition-shadow"
-                                >
-                                    <CardHeader>
-                                        <div className="flex justify-between items-start">
-                                            <div className="flex items-center gap-4">
-                                                <Avatar className="h-12 w-12">
-                                                    <AvatarFallback>
-                                                        {request.name
-                                                            .split(" ")
-                                                            .map((n) => n[0])
-                                                            .join("")}
-                                                    </AvatarFallback>
-                                                </Avatar>
-                                                <div>
-                                                    <CardTitle className="text-lg">
-                                                        {request.name}
-                                                    </CardTitle>
-                                                    <CardDescription>
-                                                        {request.age} years •{" "}
-                                                        {request.class} •
-                                                        Requested{" "}
-                                                        {request.requestedAt}
-                                                    </CardDescription>
-                                                </div>
-                                            </div>
-                                            <div className="text-right">
-                                                <Badge
-                                                    variant="secondary"
-                                                    className="mb-2"
-                                                >
-                                                    {request.matchScore}% Match
-                                                </Badge>
-                                                <Badge
-                                                    className={getStatusColor(
-                                                        request.status
-                                                    )}
-                                                >
-                                                    {request.status
-                                                        .charAt(0)
-                                                        .toUpperCase() +
-                                                        request.status.slice(1)}
-                                                </Badge>
-                                            </div>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="space-y-4">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <h4 className="font-medium text-sm text-gray-600 mb-2">
-                                                        Exam Details
-                                                    </h4>
-                                                    <p className="text-sm">
-                                                        {request.examName}
-                                                    </p>
-                                                    <p className="text-xs text-gray-500">
-                                                        {request.examType}
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <h4 className="font-medium text-sm text-gray-600 mb-2">
-                                                        Subjects
-                                                    </h4>
-                                                    <div className="flex flex-wrap gap-1">
-                                                        {request.subjects.map(
-                                                            (subject) => (
-                                                                <Badge
-                                                                    key={
-                                                                        subject
-                                                                    }
-                                                                    variant="outline"
-                                                                    className="text-xs"
-                                                                >
-                                                                    {subject}
-                                                                </Badge>
-                                                            )
-                                                        )}
+                        {scribeRequests.filter((r) => r.scribeId === scribeId)
+                            .length === 0 ? (
+                            <Card>
+                                <CardContent className="pt-6 text-center">
+                                    <AlertCircle className="h-12 w-12 text-blue-500 mx-auto mb-4" />
+                                    <h3 className="text-lg font-medium mb-2">
+                                        No requests yet
+                                    </h3>
+                                    <p className="text-gray-600">
+                                        Student requests will appear here when
+                                        they need your help.
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            <div className="grid gap-6">
+                                {scribeRequests
+                                    .filter((r) => r.scribeId === scribeId)
+                                    .map((request) => (
+                                        <Card
+                                            key={request.id}
+                                            className="hover:shadow-md transition-shadow"
+                                        >
+                                            <CardHeader>
+                                                <div className="flex justify-between items-start">
+                                                    <div className="flex items-center gap-4">
+                                                        <Avatar className="h-12 w-12">
+                                                            <AvatarFallback>
+                                                                ST
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <div>
+                                                            <CardTitle className="text-lg">
+                                                                Student Match
+                                                                Request
+                                                            </CardTitle>
+                                                            <CardDescription>
+                                                                Request ID:{" "}
+                                                                {request.id.slice(
+                                                                    0,
+                                                                    8
+                                                                )}
+                                                                ...
+                                                            </CardDescription>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-right">
+                                                        <Badge
+                                                            variant="secondary"
+                                                            className="mb-2"
+                                                        >
+                                                            {request.matchScore}
+                                                            % Match
+                                                        </Badge>
+                                                        <Badge
+                                                            className={getStatusColor(
+                                                                request.status
+                                                            )}
+                                                        >
+                                                            {request.status
+                                                                .charAt(0)
+                                                                .toUpperCase() +
+                                                                request.status.slice(
+                                                                    1
+                                                                )}
+                                                        </Badge>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <div className="space-y-4">
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        <div>
+                                                            <h4 className="font-medium text-sm text-gray-600 mb-2">
+                                                                Exam Details
+                                                            </h4>
+                                                            <p className="text-sm">
+                                                                {
+                                                                    request
+                                                                        .examDetails
+                                                                        .examName
+                                                                }
+                                                            </p>
+                                                            <p className="text-xs text-gray-500">
+                                                                {
+                                                                    request
+                                                                        .examDetails
+                                                                        .examType
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-medium text-sm text-gray-600 mb-2">
+                                                                Subjects
+                                                            </h4>
+                                                            <div className="flex flex-wrap gap-1">
+                                                                {request.examDetails.subjects.map(
+                                                                    (
+                                                                        subject
+                                                                    ) => (
+                                                                        <Badge
+                                                                            key={
+                                                                                subject
+                                                                            }
+                                                                            variant="outline"
+                                                                            className="text-xs"
+                                                                        >
+                                                                            {
+                                                                                subject
+                                                                            }
+                                                                        </Badge>
+                                                                    )
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                            <div className="flex items-center gap-6 text-sm text-gray-600">
-                                                <div className="flex items-center gap-1">
-                                                    <Calendar className="h-4 w-4" />
-                                                    {request.examDate}
-                                                </div>
-                                                <div className="flex items-center gap-1">
-                                                    <Clock className="h-4 w-4" />
-                                                    {request.examTime}
-                                                </div>
-                                                <div className="flex items-center gap-1">
-                                                    <User className="h-4 w-4" />
-                                                    {request.language}
-                                                </div>
-                                            </div>
+                                                    <div className="flex items-center gap-6 text-sm text-gray-600">
+                                                        <div className="flex items-center gap-1">
+                                                            <Calendar className="h-4 w-4" />
+                                                            {
+                                                                request
+                                                                    .examDetails
+                                                                    .examDate
+                                                            }
+                                                        </div>
+                                                        <div className="flex items-center gap-1">
+                                                            <Clock className="h-4 w-4" />
+                                                            {
+                                                                request
+                                                                    .examDetails
+                                                                    .examTime
+                                                            }
+                                                        </div>
+                                                    </div>
 
-                                            <div className="flex items-start gap-1 text-sm text-gray-600">
-                                                <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                                                <span>{request.location}</span>
-                                            </div>
-
-                                            {request.genderPreference !==
-                                                "No Preference" && (
-                                                <div className="text-sm text-gray-600">
-                                                    <strong>
-                                                        Gender Preference:
-                                                    </strong>{" "}
-                                                    {request.genderPreference}
+                                                    <div className="flex items-start gap-1 text-sm text-gray-600">
+                                                        <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                                                        <span>
+                                                            {
+                                                                request
+                                                                    .examDetails
+                                                                    .location
+                                                            }
+                                                        </span>
+                                                    </div>
                                                 </div>
-                                            )}
-
-                                            {request.status === "pending" && (
-                                                <div className="flex gap-2 pt-2">
-                                                    <Button
-                                                        onClick={() =>
-                                                            handleRequestAction(
-                                                                request.id,
-                                                                "accept"
-                                                            )
-                                                        }
-                                                        className="flex items-center gap-2"
-                                                    >
-                                                        <CheckCircle className="h-4 w-4" />
-                                                        Accept Request
-                                                    </Button>
-                                                    <Button
-                                                        variant="outline"
-                                                        onClick={() =>
-                                                            handleRequestAction(
-                                                                request.id,
-                                                                "decline"
-                                                            )
-                                                        }
-                                                        className="flex items-center gap-2"
-                                                    >
-                                                        <XCircle className="h-4 w-4" />
-                                                        Decline
-                                                    </Button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                            </div>
+                        )}
                     </TabsContent>
 
                     <TabsContent value="assignments" className="space-y-6">
                         <h2 className="text-xl font-semibold">
                             Upcoming Assignments
                         </h2>
-                        <div className="grid gap-4">
-                            {upcomingAssignments.map((assignment) => (
-                                <Card key={assignment.id}>
-                                    <CardContent className="pt-6">
-                                        <div className="flex justify-between items-start">
-                                            <div className="space-y-2">
-                                                <h3 className="font-semibold">
-                                                    {assignment.studentName}
-                                                </h3>
-                                                <p className="text-sm text-gray-600">
-                                                    {assignment.subject}
-                                                </p>
-                                                <div className="flex items-center gap-4 text-sm text-gray-500">
-                                                    <div className="flex items-center gap-1">
-                                                        <Calendar className="h-4 w-4" />
-                                                        {assignment.examDate}
+
+                        {matches.length === 0 ? (
+                            <Card>
+                                <CardContent className="pt-6 text-center">
+                                    <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                                    <h3 className="text-lg font-medium mb-2">
+                                        No upcoming assignments
+                                    </h3>
+                                    <p className="text-gray-600">
+                                        Your confirmed matches will appear here.
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        ) : (
+                            <div className="grid gap-4">
+                                {matches
+                                    .filter(
+                                        (match) => match.status === "confirmed"
+                                    )
+                                    .map((match) => (
+                                        <Card key={match.id}>
+                                            <CardContent className="pt-6">
+                                                <div className="flex justify-between items-start">
+                                                    <div className="space-y-2">
+                                                        <h3 className="font-semibold">
+                                                            Student Assignment
+                                                        </h3>
+                                                        <p className="text-sm text-gray-600">
+                                                            {match.examDetails.subjects.join(
+                                                                ", "
+                                                            )}
+                                                        </p>
+                                                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                                                            <div className="flex items-center gap-1">
+                                                                <Calendar className="h-4 w-4" />
+                                                                {
+                                                                    match
+                                                                        .examDetails
+                                                                        .examDate
+                                                                }
+                                                            </div>
+                                                            <div className="flex items-center gap-1">
+                                                                <Clock className="h-4 w-4" />
+                                                                {
+                                                                    match
+                                                                        .examDetails
+                                                                        .examTime
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex items-start gap-1 text-sm text-gray-500">
+                                                            <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                                                            <span>
+                                                                {
+                                                                    match
+                                                                        .examDetails
+                                                                        .location
+                                                                }
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="flex items-center gap-1">
-                                                        <Clock className="h-4 w-4" />
-                                                        {assignment.examTime}
-                                                    </div>
+                                                    <Badge
+                                                        className={getStatusColor(
+                                                            match.status
+                                                        )}
+                                                    >
+                                                        {match.status
+                                                            .charAt(0)
+                                                            .toUpperCase() +
+                                                            match.status.slice(
+                                                                1
+                                                            )}
+                                                    </Badge>
                                                 </div>
-                                                <div className="flex items-start gap-1 text-sm text-gray-500">
-                                                    <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                                                    <span>
-                                                        {assignment.location}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <Badge
-                                                className={getStatusColor(
-                                                    assignment.status
-                                                )}
-                                            >
-                                                {assignment.status
-                                                    .charAt(0)
-                                                    .toUpperCase() +
-                                                    assignment.status.slice(1)}
-                                            </Badge>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))}
+                            </div>
+                        )}
                     </TabsContent>
 
                     <TabsContent value="history" className="space-y-6">
