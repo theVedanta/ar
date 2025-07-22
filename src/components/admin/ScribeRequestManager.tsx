@@ -18,7 +18,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -29,8 +28,6 @@ import {
     User,
     Calendar,
     MapPin,
-    BookOpen,
-    Star,
     AlertCircle,
 } from "lucide-react";
 import { useScribeRequests } from "@/hooks/api/useScribeRequests";
@@ -43,21 +40,14 @@ interface ScribeRequestManagerProps {
 export default function ScribeRequestManager({
     adminId,
 }: ScribeRequestManagerProps) {
-    const {
-        requests,
-        loading,
-        error,
-        refetch,
-        approveRequest,
-        rejectRequest,
-    } = useScribeRequests({
-        adminId,
-        autoFetch: true,
-    });
+    const { requests, loading, error, refetch, approveRequest, rejectRequest } =
+        useScribeRequests({
+            adminId,
+            autoFetch: true,
+        });
 
-    const [selectedRequest, setSelectedRequest] = useState<ScribeRequest | null>(
-        null
-    );
+    const [selectedRequest, setSelectedRequest] =
+        useState<ScribeRequest | null>(null);
     const [rejectionReason, setRejectionReason] = useState("");
     const [actionLoading, setActionLoading] = useState(false);
     const [showRejectDialog, setShowRejectDialog] = useState(false);
@@ -167,15 +157,15 @@ export default function ScribeRequestManager({
         );
     }
 
-    const pendingRequests = requests.filter(req => req.status === 'pending');
-    const processedRequests = requests.filter(req => req.status !== 'pending');
+    const pendingRequests = requests.filter((req) => req.status === "pending");
+    const processedRequests = requests.filter(
+        (req) => req.status !== "pending"
+    );
 
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold">
-                    Scribe Match Requests
-                </h2>
+                <h2 className="text-xl font-semibold">Scribe Match Requests</h2>
                 <div className="flex items-center gap-2">
                     <Badge variant="secondary">
                         {pendingRequests.length} pending
@@ -194,7 +184,8 @@ export default function ScribeRequestManager({
                             No requests yet
                         </h3>
                         <p className="text-gray-600">
-                            Scribe requests will appear here when students request matches.
+                            Scribe requests will appear here when students
+                            request matches.
                         </p>
                     </CardContent>
                 </Card>
@@ -267,7 +258,8 @@ export default function ScribeRequestManager({
                     <DialogHeader>
                         <DialogTitle>Reject Scribe Request</DialogTitle>
                         <DialogDescription>
-                            Please provide a reason for rejecting this scribe match request.
+                            Please provide a reason for rejecting this scribe
+                            match request.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4">
@@ -277,7 +269,9 @@ export default function ScribeRequestManager({
                                 id="reason"
                                 placeholder="Please explain why this request is being rejected..."
                                 value={rejectionReason}
-                                onChange={(e) => setRejectionReason(e.target.value)}
+                                onChange={(e) =>
+                                    setRejectionReason(e.target.value)
+                                }
                                 className="mt-1"
                             />
                         </div>
@@ -349,10 +343,15 @@ function RequestCard({
                     </div>
                     <div className="text-right">
                         <Badge className={getStatusColor(request.status)}>
-                            {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                            {request.status.charAt(0).toUpperCase() +
+                                request.status.slice(1)}
                         </Badge>
                         {request.matchScore && (
-                            <p className={`text-sm font-medium mt-1 ${getMatchScoreColor(request.matchScore)}`}>
+                            <p
+                                className={`text-sm font-medium mt-1 ${getMatchScoreColor(
+                                    request.matchScore
+                                )}`}
+                            >
                                 {request.matchScore}% match
                             </p>
                         )}
@@ -369,8 +368,12 @@ function RequestCard({
                             <h4 className="font-medium text-sm text-gray-600 mb-2">
                                 Exam Details
                             </h4>
-                            <p className="text-sm font-medium">{request.examDetails.examName}</p>
-                            <p className="text-xs text-gray-500">{request.examDetails.examType}</p>
+                            <p className="text-sm font-medium">
+                                {request.examDetails.examName}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                                {request.examDetails.examType}
+                            </p>
                         </div>
                         <div>
                             <h4 className="font-medium text-sm text-gray-600 mb-2">
@@ -378,7 +381,11 @@ function RequestCard({
                             </h4>
                             <div className="flex flex-wrap gap-1">
                                 {request.examDetails.subjects.map((subject) => (
-                                    <Badge key={subject} variant="outline" className="text-xs">
+                                    <Badge
+                                        key={subject}
+                                        variant="outline"
+                                        className="text-xs"
+                                    >
                                         {subject}
                                     </Badge>
                                 ))}
@@ -426,14 +433,18 @@ function RequestCard({
 
                     {request.status === "approved" && request.approvedBy && (
                         <div className="text-sm text-green-600">
-                            Approved by {request.approvedBy} on {request.approvedAt && formatDate(request.approvedAt)}
+                            Approved by {request.approvedBy} on{" "}
+                            {request.approvedAt &&
+                                formatDate(request.approvedAt)}
                         </div>
                     )}
 
                     {request.status === "rejected" && request.rejectedBy && (
                         <div className="space-y-1">
                             <div className="text-sm text-red-600">
-                                Rejected by {request.rejectedBy} on {request.rejectedAt && formatDate(request.rejectedAt)}
+                                Rejected by {request.rejectedBy} on{" "}
+                                {request.rejectedAt &&
+                                    formatDate(request.rejectedAt)}
                             </div>
                             {request.rejectionReason && (
                                 <div className="text-sm text-gray-600">

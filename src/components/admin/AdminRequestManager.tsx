@@ -20,7 +20,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
+
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import {
@@ -91,7 +91,7 @@ export default function AdminRequestManager({
     };
 
     const formatDate = (date: Date | string) => {
-        const d = new Date();
+        const d = typeof date === "string" ? new Date(date) : date;
         return d.toLocaleDateString("en-IN", {
             year: "numeric",
             month: "short",

@@ -12,7 +12,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, MapPin, Clock, User, AlertCircle, BookOpen } from "lucide-react";
+import { Star, MapPin, Clock, AlertCircle, BookOpen } from "lucide-react";
 import { useMatches } from "@/hooks/api/useMatches";
 import { useScribeRequests } from "@/hooks/api/useScribeRequests";
 import { useState } from "react";
@@ -27,7 +27,7 @@ export default function StudentDashboard() {
         autoFetch: true,
     });
 
-    const { requests } = useScribeRequests({
+    useScribeRequests({
         autoFetch: false, // We'll fetch manually when needed
     });
 
@@ -109,9 +109,9 @@ export default function StudentDashboard() {
                                         No matches yet
                                     </h3>
                                     <p className="text-gray-600 mb-4">
-                                        Click "Find Available Scribes" to
-                                        discover scribes who can help with your
-                                        exam.
+                                        Click &quot;Find Available Scribes&quot;
+                                        to discover scribes who can help with
+                                        your exam.
                                     </p>
                                 </CardContent>
                             </Card>

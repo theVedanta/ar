@@ -2,18 +2,30 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertCircle, CheckCircle, User, School, BookOpen } from "lucide-react";
 
 export default function ApiExample() {
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<unknown>(null);
     const [error, setError] = useState<string | null>(null);
 
     // Form states
@@ -24,7 +36,7 @@ export default function ApiExample() {
         class: "12th Grade",
         subjects: "Mathematics,Physics",
         schoolName: "Test School",
-        schoolId: "school-001"
+        schoolId: "school-001",
     });
 
     const [requestForm, setRequestForm] = useState({
@@ -33,7 +45,7 @@ export default function ApiExample() {
         schoolId: "school-demo",
         requestId: "",
         action: "approve",
-        rejectionReason: ""
+        rejectionReason: "",
     });
 
     const clearResults = () => {
@@ -41,7 +53,11 @@ export default function ApiExample() {
         setError(null);
     };
 
-    const handleApiCall = async (endpoint: string, method: string = "GET", body?: any) => {
+    const handleApiCall = async (
+        endpoint: string,
+        method: string = "GET",
+        body?: unknown
+    ) => {
         setLoading(true);
         clearResults();
 
@@ -73,9 +89,12 @@ export default function ApiExample() {
     };
 
     const createUser = () => {
-        const subjects = userForm.subjects.split(",").map(s => s.trim()).filter(Boolean);
+        const subjects = userForm.subjects
+            .split(",")
+            .map((s) => s.trim())
+            .filter(Boolean);
 
-        const body: any = {
+        const body: Record<string, unknown> = {
             email: userForm.email,
             name: userForm.name,
             role: userForm.role,
@@ -108,8 +127,8 @@ export default function ApiExample() {
             schoolId: requestForm.schoolId,
             documents: {
                 schoolCertificate: "demo-cert-url",
-                idProof: "demo-id-url"
-            }
+                idProof: "demo-id-url",
+            },
         };
 
         handleApiCall("/api/admin-requests", "POST", body);
@@ -125,7 +144,7 @@ export default function ApiExample() {
             return;
         }
 
-        const body: any = {
+        const body: Record<string, unknown> = {
             requestId: requestForm.requestId,
             action: requestForm.action,
             superAdminId: "demo-superadmin-id",
@@ -148,9 +167,9 @@ export default function ApiExample() {
                 examDate: "2024-12-22",
                 examTime: "2:00 PM",
                 location: "Delhi Public School, Delhi",
-                subjects: ["Mathematics", "Physics"]
+                subjects: ["Mathematics", "Physics"],
             },
-            adminId: "demo-admin-id"
+            adminId: "demo-admin-id",
         };
 
         handleApiCall("/api/scribe-requests", "POST", body);
@@ -169,9 +188,9 @@ export default function ApiExample() {
                 examDate: "2024-12-20",
                 examTime: "10:00 AM",
                 location: "Delhi",
-                subjects: ["Mathematics", "Physics"]
+                subjects: ["Mathematics", "Physics"],
             },
-            location: "Delhi"
+            location: "Delhi",
         };
 
         handleApiCall("/api/matches", "POST", body);
@@ -192,8 +211,12 @@ export default function ApiExample() {
                 <Tabs defaultValue="users" className="space-y-6">
                     <TabsList className="grid w-full grid-cols-5">
                         <TabsTrigger value="users">Users</TabsTrigger>
-                        <TabsTrigger value="admin-requests">Admin Requests</TabsTrigger>
-                        <TabsTrigger value="scribe-requests">Scribe Requests</TabsTrigger>
+                        <TabsTrigger value="admin-requests">
+                            Admin Requests
+                        </TabsTrigger>
+                        <TabsTrigger value="scribe-requests">
+                            Scribe Requests
+                        </TabsTrigger>
                         <TabsTrigger value="matches">Matches</TabsTrigger>
                         <TabsTrigger value="demo">Demo Data</TabsTrigger>
                     </TabsList>
@@ -207,7 +230,8 @@ export default function ApiExample() {
                                     User Management
                                 </CardTitle>
                                 <CardDescription>
-                                    Create and manage users (students, scribes, admins)
+                                    Create and manage users (students, scribes,
+                                    admins)
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
@@ -216,39 +240,71 @@ export default function ApiExample() {
                                         <Label>Email</Label>
                                         <Input
                                             value={userForm.email}
-                                            onChange={(e) => setUserForm({...userForm, email: e.target.value})}
+                                            onChange={(e) =>
+                                                setUserForm({
+                                                    ...userForm,
+                                                    email: e.target.value,
+                                                })
+                                            }
                                         />
                                     </div>
                                     <div>
                                         <Label>Name</Label>
                                         <Input
                                             value={userForm.name}
-                                            onChange={(e) => setUserForm({...userForm, name: e.target.value})}
+                                            onChange={(e) =>
+                                                setUserForm({
+                                                    ...userForm,
+                                                    name: e.target.value,
+                                                })
+                                            }
                                         />
                                     </div>
                                     <div>
                                         <Label>Role</Label>
                                         <Select
                                             value={userForm.role}
-                                            onValueChange={(value) => setUserForm({...userForm, role: value})}
+                                            onValueChange={(value) =>
+                                                setUserForm({
+                                                    ...userForm,
+                                                    role: value,
+                                                })
+                                            }
                                         >
                                             <SelectTrigger>
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="student">Student</SelectItem>
-                                                <SelectItem value="scribe">Scribe</SelectItem>
-                                                <SelectItem value="admin">Admin</SelectItem>
-                                                <SelectItem value="superadmin">SuperAdmin</SelectItem>
+                                                <SelectItem value="student">
+                                                    Student
+                                                </SelectItem>
+                                                <SelectItem value="scribe">
+                                                    Scribe
+                                                </SelectItem>
+                                                <SelectItem value="admin">
+                                                    Admin
+                                                </SelectItem>
+                                                <SelectItem value="superadmin">
+                                                    SuperAdmin
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    {(userForm.role === "student" || userForm.role === "scribe") && (
+                                    {(userForm.role === "student" ||
+                                        userForm.role === "scribe") && (
                                         <div>
-                                            <Label>Subjects (comma-separated)</Label>
+                                            <Label>
+                                                Subjects (comma-separated)
+                                            </Label>
                                             <Input
                                                 value={userForm.subjects}
-                                                onChange={(e) => setUserForm({...userForm, subjects: e.target.value})}
+                                                onChange={(e) =>
+                                                    setUserForm({
+                                                        ...userForm,
+                                                        subjects:
+                                                            e.target.value,
+                                                    })
+                                                }
                                                 placeholder="Mathematics,Physics,Chemistry"
                                             />
                                         </div>
@@ -258,7 +314,12 @@ export default function ApiExample() {
                                             <Label>Class</Label>
                                             <Input
                                                 value={userForm.class}
-                                                onChange={(e) => setUserForm({...userForm, class: e.target.value})}
+                                                onChange={(e) =>
+                                                    setUserForm({
+                                                        ...userForm,
+                                                        class: e.target.value,
+                                                    })
+                                                }
                                             />
                                         </div>
                                     )}
@@ -268,14 +329,26 @@ export default function ApiExample() {
                                                 <Label>School Name</Label>
                                                 <Input
                                                     value={userForm.schoolName}
-                                                    onChange={(e) => setUserForm({...userForm, schoolName: e.target.value})}
+                                                    onChange={(e) =>
+                                                        setUserForm({
+                                                            ...userForm,
+                                                            schoolName:
+                                                                e.target.value,
+                                                        })
+                                                    }
                                                 />
                                             </div>
                                             <div>
                                                 <Label>School ID</Label>
                                                 <Input
                                                     value={userForm.schoolId}
-                                                    onChange={(e) => setUserForm({...userForm, schoolId: e.target.value})}
+                                                    onChange={(e) =>
+                                                        setUserForm({
+                                                            ...userForm,
+                                                            schoolId:
+                                                                e.target.value,
+                                                        })
+                                                    }
                                                 />
                                             </div>
                                         </>
@@ -306,7 +379,12 @@ export default function ApiExample() {
                                         <Label>User ID</Label>
                                         <Input
                                             value={requestForm.userId}
-                                            onChange={(e) => setRequestForm({...requestForm, userId: e.target.value})}
+                                            onChange={(e) =>
+                                                setRequestForm({
+                                                    ...requestForm,
+                                                    userId: e.target.value,
+                                                })
+                                            }
                                             placeholder="Leave empty for demo ID"
                                         />
                                     </div>
@@ -314,34 +392,59 @@ export default function ApiExample() {
                                         <Label>School Name</Label>
                                         <Input
                                             value={requestForm.schoolName}
-                                            onChange={(e) => setRequestForm({...requestForm, schoolName: e.target.value})}
+                                            onChange={(e) =>
+                                                setRequestForm({
+                                                    ...requestForm,
+                                                    schoolName: e.target.value,
+                                                })
+                                            }
                                         />
                                     </div>
                                     <div>
                                         <Label>School ID</Label>
                                         <Input
                                             value={requestForm.schoolId}
-                                            onChange={(e) => setRequestForm({...requestForm, schoolId: e.target.value})}
+                                            onChange={(e) =>
+                                                setRequestForm({
+                                                    ...requestForm,
+                                                    schoolId: e.target.value,
+                                                })
+                                            }
                                         />
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
-                                    <Button onClick={createAdminRequest} disabled={loading}>
+                                    <Button
+                                        onClick={createAdminRequest}
+                                        disabled={loading}
+                                    >
                                         Create Admin Request
                                     </Button>
-                                    <Button onClick={getPendingAdminRequests} variant="outline" disabled={loading}>
+                                    <Button
+                                        onClick={getPendingAdminRequests}
+                                        variant="outline"
+                                        disabled={loading}
+                                    >
                                         Get Pending Requests
                                     </Button>
                                 </div>
 
                                 <div className="border-t pt-4 space-y-4">
-                                    <h4 className="font-medium">Update Request</h4>
+                                    <h4 className="font-medium">
+                                        Update Request
+                                    </h4>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div>
                                             <Label>Request ID</Label>
                                             <Input
                                                 value={requestForm.requestId}
-                                                onChange={(e) => setRequestForm({...requestForm, requestId: e.target.value})}
+                                                onChange={(e) =>
+                                                    setRequestForm({
+                                                        ...requestForm,
+                                                        requestId:
+                                                            e.target.value,
+                                                    })
+                                                }
                                                 placeholder="Request ID to update"
                                             />
                                         </div>
@@ -349,14 +452,23 @@ export default function ApiExample() {
                                             <Label>Action</Label>
                                             <Select
                                                 value={requestForm.action}
-                                                onValueChange={(value) => setRequestForm({...requestForm, action: value})}
+                                                onValueChange={(value) =>
+                                                    setRequestForm({
+                                                        ...requestForm,
+                                                        action: value,
+                                                    })
+                                                }
                                             >
                                                 <SelectTrigger>
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="approve">Approve</SelectItem>
-                                                    <SelectItem value="reject">Reject</SelectItem>
+                                                    <SelectItem value="approve">
+                                                        Approve
+                                                    </SelectItem>
+                                                    <SelectItem value="reject">
+                                                        Reject
+                                                    </SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </div>
@@ -365,13 +477,24 @@ export default function ApiExample() {
                                         <div>
                                             <Label>Rejection Reason</Label>
                                             <Textarea
-                                                value={requestForm.rejectionReason}
-                                                onChange={(e) => setRequestForm({...requestForm, rejectionReason: e.target.value})}
+                                                value={
+                                                    requestForm.rejectionReason
+                                                }
+                                                onChange={(e) =>
+                                                    setRequestForm({
+                                                        ...requestForm,
+                                                        rejectionReason:
+                                                            e.target.value,
+                                                    })
+                                                }
                                                 placeholder="Reason for rejection"
                                             />
                                         </div>
                                     )}
-                                    <Button onClick={updateAdminRequest} disabled={loading}>
+                                    <Button
+                                        onClick={updateAdminRequest}
+                                        disabled={loading}
+                                    >
                                         Update Request
                                     </Button>
                                 </div>
@@ -392,11 +515,18 @@ export default function ApiExample() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <Button onClick={createScribeRequest} disabled={loading}>
+                                <Button
+                                    onClick={createScribeRequest}
+                                    disabled={loading}
+                                >
                                     Create Demo Scribe Request
                                 </Button>
                                 <Button
-                                    onClick={() => handleApiCall("/api/scribe-requests?status=pending")}
+                                    onClick={() =>
+                                        handleApiCall(
+                                            "/api/scribe-requests?status=pending"
+                                        )
+                                    }
                                     variant="outline"
                                     disabled={loading}
                                 >
@@ -416,11 +546,18 @@ export default function ApiExample() {
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <Button onClick={findMatches} disabled={loading}>
+                                <Button
+                                    onClick={findMatches}
+                                    disabled={loading}
+                                >
                                     Find Matches for Demo Student
                                 </Button>
                                 <Button
-                                    onClick={() => handleApiCall("/api/matches?studentId=demo-student-id")}
+                                    onClick={() =>
+                                        handleApiCall(
+                                            "/api/matches?studentId=demo-student-id"
+                                        )
+                                    }
                                     variant="outline"
                                     disabled={loading}
                                 >
@@ -441,13 +578,28 @@ export default function ApiExample() {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div className="flex gap-2 flex-wrap">
-                                    <Button onClick={() => createDemoData("users")} disabled={loading}>
+                                    <Button
+                                        onClick={() => createDemoData("users")}
+                                        disabled={loading}
+                                    >
                                         Create Demo Users
                                     </Button>
-                                    <Button onClick={() => createDemoData("admin-request")} variant="outline" disabled={loading}>
+                                    <Button
+                                        onClick={() =>
+                                            createDemoData("admin-request")
+                                        }
+                                        variant="outline"
+                                        disabled={loading}
+                                    >
                                         Create Admin Request
                                     </Button>
-                                    <Button onClick={() => createDemoData("scribe-request")} variant="outline" disabled={loading}>
+                                    <Button
+                                        onClick={() =>
+                                            createDemoData("scribe-request")
+                                        }
+                                        variant="outline"
+                                        disabled={loading}
+                                    >
                                         Create Scribe Request
                                     </Button>
                                 </div>
@@ -477,7 +629,11 @@ export default function ApiExample() {
                             API Response
                         </CardTitle>
                         {(result || error) && (
-                            <Button onClick={clearResults} variant="outline" size="sm">
+                            <Button
+                                onClick={clearResults}
+                                variant="outline"
+                                size="sm"
+                            >
                                 Clear
                             </Button>
                         )}
@@ -487,7 +643,9 @@ export default function ApiExample() {
                             <div className="flex items-center justify-center py-8">
                                 <div className="text-center">
                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-                                    <p className="text-gray-600">Making API call...</p>
+                                    <p className="text-gray-600">
+                                        Making API call...
+                                    </p>
                                 </div>
                             </div>
                         )}
@@ -498,26 +656,29 @@ export default function ApiExample() {
                                     <AlertCircle className="h-4 w-4" />
                                     Error
                                 </div>
-                                <pre className="text-sm text-red-700 whitespace-pre-wrap">{error}</pre>
+                                <pre className="text-sm text-red-700 whitespace-pre-wrap">
+                                    {error}
+                                </pre>
                             </div>
                         )}
-
-                        {result && (
+                        {/* {result && (
                             <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                                 <div className="flex items-center gap-2 text-green-800 font-medium mb-2">
                                     <CheckCircle className="h-4 w-4" />
                                     Success
                                 </div>
                                 <pre className="text-sm text-gray-700 whitespace-pre-wrap bg-white p-3 rounded border overflow-auto">
-                                    {JSON.stringify(result, null, 2)}
+                                    {JSON.stringify(result as any, null, 2)}
                                 </pre>
                             </div>
-                        )}
+                        )} */}
 
                         {!loading && !error && !result && (
                             <div className="text-center py-8 text-gray-500">
                                 <p>API responses will appear here</p>
-                                <p className="text-sm">Try making an API call using the tabs above</p>
+                                <p className="text-sm">
+                                    Try making an API call using the tabs above
+                                </p>
                             </div>
                         )}
                     </CardContent>
@@ -531,32 +692,51 @@ export default function ApiExample() {
                     <CardContent className="space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <h4 className="font-medium mb-2">1. Create Demo Data</h4>
+                                <h4 className="font-medium mb-2">
+                                    1. Create Demo Data
+                                </h4>
                                 <p className="text-sm text-gray-600 mb-2">
-                                    Start by creating demo users to test the system
+                                    Start by creating demo users to test the
+                                    system
                                 </p>
-                                <Badge variant="outline">Demo Data → Create Demo Users</Badge>
+                                <Badge variant="outline">
+                                    Demo Data → Create Demo Users
+                                </Badge>
                             </div>
                             <div>
-                                <h4 className="font-medium mb-2">2. Test Admin Workflow</h4>
+                                <h4 className="font-medium mb-2">
+                                    2. Test Admin Workflow
+                                </h4>
                                 <p className="text-sm text-gray-600 mb-2">
                                     Create and approve admin requests
                                 </p>
-                                <Badge variant="outline">Admin Requests → Create & Approve</Badge>
+                                <Badge variant="outline">
+                                    Admin Requests → Create & Approve
+                                </Badge>
                             </div>
                             <div>
-                                <h4 className="font-medium mb-2">3. Test Scribe Matching</h4>
+                                <h4 className="font-medium mb-2">
+                                    3. Test Scribe Matching
+                                </h4>
                                 <p className="text-sm text-gray-600 mb-2">
                                     Create scribe requests and find matches
                                 </p>
-                                <Badge variant="outline">Matches → Find Matches</Badge>
+                                <Badge variant="outline">
+                                    Matches → Find Matches
+                                </Badge>
                             </div>
                             <div>
-                                <h4 className="font-medium mb-2">4. View Components</h4>
+                                <h4 className="font-medium mb-2">
+                                    4. View Components
+                                </h4>
                                 <p className="text-sm text-gray-600 mb-2">
-                                    Check the admin dashboards to see the UI components
+                                    Check the admin dashboards to see the UI
+                                    components
                                 </p>
-                                <Badge variant="outline">Visit /dashboard/admin or /dashboard/superadmin</Badge>
+                                <Badge variant="outline">
+                                    Visit /dashboard/admin or
+                                    /dashboard/superadmin
+                                </Badge>
                             </div>
                         </div>
                     </CardContent>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAdminById, getAdminRequestByUserId } from "@/lib/firebase/services";
+import { getAdminById } from "@/lib/firebase/services";
 
 // GET - Check admin approval status for a user
 export async function GET(request: NextRequest) {

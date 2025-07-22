@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+    createContext,
+    useContext,
+    useState,
+    useEffect,
+    useCallback,
+} from "react";
 import { useUser } from "@clerk/nextjs";
 import { useUsers } from "@/hooks/api/useUsers";
 
@@ -14,7 +20,7 @@ interface UserProfile {
     isActive: boolean;
     profileComplete: boolean;
     // Additional fields based on role
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 interface UserRoleContextType {
@@ -51,8 +57,15 @@ export function UserRoleProvider({ children }: UserRoleProviderProps) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const checkProfileCompleteness = (profile: any, userRole: UserRole): boolean => {
+    const checkProfileCompleteness = (
+        profile: Record<string, unknown>,
+        userRole: UserRole
+    ): boolean => {
         if (!profile || !userRole) return false;
+
+        const isArrayWithLength = (value: unknown): value is unknown[] => {
+            return Array.isArray(value) && value.length > 0;
+        };
 
         switch (userRole) {
             case "student":
@@ -60,28 +73,32 @@ export function UserRoleProvider({ children }: UserRoleProviderProps) {
                     profile.name &&
                     profile.class &&
                     profile.subjects &&
-                    profile.subjects.length > 0 &&
+                    isArrayWithLength(profile.subjects) &&
                     profile.examDetails
                 );
             case "scribe":
                 return !!(
                     profile.name &&
                     profile.subjects &&
-                    profile.subjects.length > 0 &&
+                    isArrayWithLength(profile.subjects) &&
                     profile.examTypes &&
-                    profile.examTypes.length > 0 &&
+                    isArrayWithLength(profile.examTypes) &&
                     profile.availability
                 );
             case "admin":
-                return !!(profile.name && profile.schoolName && profile.schoolId);
+                return !!(
+                    profile.name &&
+                    profile.schoolName &&
+                    profile.schoolId
+                );
             case "superadmin":
-                return !!(profile.name);
+                return !!profile.name;
             default:
                 return false;
         }
     };
 
-    const refreshProfile = async () => {
+    const refreshProfile = useCallback(async () => {
         if (!user?.id || !isLoaded) return;
 
         setLoading(true);
@@ -89,9 +106,9 @@ export function UserRoleProvider({ children }: UserRoleProviderProps) {
 
         try {
             // Try to fetch user with different roles
-            const roles: UserRole[] = ["student", "scribe", "admin", "superadmin"];
+            const roles = ["student", "scribe", "admin", "superadmin"] as const;
             let foundProfile = null;
-            let foundRole = null;
+            let foundRole: UserRole = null;
 
             for (const testRole of roles) {
                 try {
@@ -101,17 +118,20 @@ export function UserRoleProvider({ children }: UserRoleProviderProps) {
                         foundRole = testRole;
                         break;
                     }
-                } catch (err) {
+                } catch {
                     // Continue to next role
                 }
             }
 
             if (foundProfile && foundRole) {
-                const profileComplete = checkProfileCompleteness(foundProfile, foundRole);
+                const profileComplete = checkProfileCompleteness(
+                    foundProfile as Record<string, unknown>,
+                    foundRole
+                );
                 setUserProfile({
                     ...foundProfile,
                     profileComplete,
-                });
+                } as UserProfile);
                 setRole(foundRole);
             } else {
                 // No profile found, user needs to choose role and create profile
@@ -119,17 +139,19 @@ export function UserRoleProvider({ children }: UserRoleProviderProps) {
                 setRole(null);
             }
         } catch (err) {
-            setError(err instanceof Error ? err.message : "Failed to load profile");
+            setError(
+                err instanceof Error ? err.message : "Failed to load profile"
+            );
         } finally {
             setLoading(false);
         }
-    };
+    }, [user?.id, isLoaded, getUser]);
 
     useEffect(() => {
         if (isLoaded && user?.id) {
             refreshProfile();
         }
-    }, [user?.id, isLoaded]);
+    }, [user?.id, isLoaded, refreshProfile]);
 
     const value: UserRoleContextType = {
         userProfile,

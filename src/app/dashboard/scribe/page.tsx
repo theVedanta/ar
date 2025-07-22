@@ -2,7 +2,6 @@
 
 import type React from "react";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -14,16 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    Star,
-    Calendar,
-    Clock,
-    MapPin,
-    User,
-    CheckCircle,
-    XCircle,
-    AlertCircle,
-} from "lucide-react";
+import { Star, Calendar, Clock, MapPin, AlertCircle } from "lucide-react";
 import { useScribeRequests } from "@/hooks/api/useScribeRequests";
 import { useMatches } from "@/hooks/api/useMatches";
 
@@ -31,12 +21,11 @@ export default function ScribeDashboard() {
     // This should come from authentication/session
     const scribeId = "demo-scribe-id";
 
-    const { requests: scribeRequests, loading: requestsLoading } =
-        useScribeRequests({
-            autoFetch: false,
-        });
+    const { requests: scribeRequests } = useScribeRequests({
+        autoFetch: false,
+    });
 
-    const { matches, loading: matchesLoading } = useMatches({
+    const { matches } = useMatches({
         scribeId,
         autoFetch: true,
     });

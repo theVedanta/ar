@@ -7,7 +7,7 @@ interface CreateUserData {
     // Additional data for specific roles
     class?: string;
     subjects?: string[];
-    examDetails?: any;
+    examDetails?: unknown;
     disability?: { type: "visual" };
     schoolId?: string;
     experience?: string;
@@ -28,8 +28,8 @@ interface UseUsersReturn {
     createUserIfNotExists: (
         userData: CreateUserData
     ) => Promise<{ userId: string; created: boolean }>;
-    getUser: (userId: string, role?: string) => Promise<any>;
-    updateUser: (userId: string, updateData: any) => Promise<void>;
+    getUser: (userId: string, role?: string) => Promise<unknown>;
+    updateUser: (userId: string, updateData: unknown) => Promise<void>;
 }
 
 export const useUsers = (): UseUsersReturn => {
@@ -110,7 +110,7 @@ export const useUsers = (): UseUsersReturn => {
                             created: false,
                         };
                     }
-                } catch (err) {
+                } catch {
                     // User doesn't exist, continue with creation
                 }
 
@@ -132,36 +132,39 @@ export const useUsers = (): UseUsersReturn => {
         [createUser, getUser]
     );
 
-    const updateUser = useCallback(async (userId: string, updateData: any) => {
-        setLoading(true);
-        setError(null);
+    const updateUser = useCallback(
+        async (userId: string, updateData: unknown) => {
+            setLoading(true);
+            setError(null);
 
-        try {
-            const response = await fetch("/api/users", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    userId,
-                    ...updateData,
-                }),
-            });
+            try {
+                const response = await fetch("/api/users", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        ...(updateData as Record<any, unknown>),
+                    }),
+                });
 
-            const data = await response.json();
+                const data = await response.json();
 
-            if (!response.ok) {
-                throw new Error(data.error || "Failed to update user");
+                if (!response.ok) {
+                    throw new Error(data.error || "Failed to update user");
+                }
+            } catch (err) {
+                const errorMessage =
+                    err instanceof Error ? err.message : "An error occurred";
+                setError(errorMessage);
+                throw new Error(errorMessage);
+            } finally {
+                setLoading(false);
             }
-        } catch (err) {
-            const errorMessage =
-                err instanceof Error ? err.message : "An error occurred";
-            setError(errorMessage);
-            throw new Error(errorMessage);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+        },
+        []
+    );
 
     return {
         loading,

@@ -27,7 +27,7 @@ export default function ChooseRolePage() {
                         router.push(`/dashboard/${role}`);
                         return;
                     }
-                } catch (err) {
+                } catch {
                     // Continue checking other roles
                 }
             }

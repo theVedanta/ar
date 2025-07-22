@@ -28,51 +28,51 @@ The platform connects visually impaired students with scribes for exams. The sys
 
 ```typescript
 interface Student {
-  id: string;
-  email: string;
-  name: string;
-  role: 'student';
-  class: string;
-  subjects: string[];
-  examDetails?: {
-    examName: string;
-    examType: string;
-    examDate: string;
-    examTime: string;
-    location: string;
-    language: string;
-    genderPreference?: string;
-  };
-  disability: {
-    type: string;
-    description?: string;
-  };
-  schoolId?: string;
+    id: string;
+    email: string;
+    name: string;
+    role: "student";
+    class: string;
+    subjects: string[];
+    examDetails?: {
+        examName: string;
+        examType: string;
+        examDate: string;
+        examTime: string;
+        location: string;
+        language: string;
+        genderPreference?: string;
+    };
+    disability: {
+        type: string;
+        description?: string;
+    };
+    schoolId?: string;
 }
 
 interface Scribe {
-  id: string;
-  email: string;
-  name: string;
-  role: 'scribe';
-  subjects: string[];
-  experience: string;
-  rating: number;
-  totalRatings: number;
-  location: string;
-  availability: 'available' | 'busy' | 'inactive';
-  // ... other fields
+    id: string;
+    email: string;
+    name: string;
+    role: "scribe";
+    subjects: string[];
+    experience: string;
+    rating: number;
+    totalRatings: number;
+    location: string;
+    availability: "available" | "busy" | "inactive";
+    // ... other fields
 }
 
 interface Admin {
-  id: string;
-  email: string;
-  name: string;
-  role: 'admin';
-  schoolName: string;
-  schoolId: string;
-  isApproved: boolean;
-  // ... other fields
+    id: string;
+    email: string;
+    name: string;
+    role: "admin";
+    schoolName: string;
+    schoolId: string;
+    isApproved: boolean;
+    // ... other fields
 }
 ```
 
@@ -81,6 +81,7 @@ interface Admin {
 ### 1. User Management (`/api/users`)
 
 #### Create User
+
 ```javascript
 POST /api/users
 {
@@ -96,6 +97,7 @@ POST /api/users
 ```
 
 #### Get User
+
 ```javascript
 GET /api/users?userId=user123&role=student
 ```
@@ -103,6 +105,7 @@ GET /api/users?userId=user123&role=student
 ### 2. Scribe Requests (`/api/scribe-requests`)
 
 #### Create Scribe Request
+
 ```javascript
 POST /api/scribe-requests
 {
@@ -121,12 +124,14 @@ POST /api/scribe-requests
 ```
 
 #### Get Scribe Requests (for admins)
+
 ```javascript
 GET /api/scribe-requests?adminId=admin123
 GET /api/scribe-requests?status=pending // for all pending
 ```
 
 #### Approve/Reject Request
+
 ```javascript
 PUT /api/scribe-requests
 {
@@ -140,6 +145,7 @@ PUT /api/scribe-requests
 ### 3. Admin Requests (`/api/admin-requests`)
 
 #### Create Admin Request
+
 ```javascript
 POST /api/admin-requests
 {
@@ -154,11 +160,13 @@ POST /api/admin-requests
 ```
 
 #### Get Pending Admin Requests (for superadmin)
+
 ```javascript
 GET /api/admin-requests?status=pending
 ```
 
 #### Approve/Reject Admin Request
+
 ```javascript
 PUT /api/admin-requests
 {
@@ -172,6 +180,7 @@ PUT /api/admin-requests
 ### 4. Matches (`/api/matches`)
 
 #### Create Matches (Auto-matching)
+
 ```javascript
 POST /api/matches
 {
@@ -189,12 +198,14 @@ POST /api/matches
 ```
 
 #### Get Matches
+
 ```javascript
 GET /api/matches?studentId=student123
 GET /api/matches?scribeId=scribe456
 ```
 
 #### Update Match Status
+
 ```javascript
 PUT /api/matches
 {
@@ -206,6 +217,7 @@ PUT /api/matches
 ### 5. Feedback (`/api/feedback`)
 
 #### Submit Feedback
+
 ```javascript
 POST /api/feedback
 {
@@ -219,6 +231,7 @@ POST /api/feedback
 ```
 
 #### Get Scribe Feedback
+
 ```javascript
 GET /api/feedback?scribeId=scribe456
 ```
@@ -226,131 +239,124 @@ GET /api/feedback?scribeId=scribe456
 ## React Hooks
 
 ### useScribeRequests
+
 ```javascript
-import { useScribeRequests } from '@/hooks/api/useScribeRequests';
+import { useScribeRequests } from "@/hooks/api/useScribeRequests";
 
 function AdminDashboard() {
-  const {
-    requests,
-    loading,
-    error,
-    refetch,
-    createRequest,
-    approveRequest,
-    rejectRequest
-  } = useScribeRequests({
-    adminId: 'admin123',
-    autoFetch: true
-  });
+    const {
+        requests,
+        loading,
+        error,
+        refetch,
+        createRequest,
+        approveRequest,
+        rejectRequest,
+    } = useScribeRequests({
+        adminId: "admin123",
+        autoFetch: true,
+    });
 
-  const handleApprove = async (requestId) => {
-    try {
-      await approveRequest(requestId, 'admin123');
-      // Success handled automatically
-    } catch (error) {
-      console.error('Failed to approve:', error);
-    }
-  };
+    const handleApprove = async (requestId) => {
+        try {
+            await approveRequest(requestId, "admin123");
+            // Success handled automatically
+        } catch (error) {
+            console.error("Failed to approve:", error);
+        }
+    };
 
-  return (
-    <div>
-      {loading && <div>Loading...</div>}
-      {error && <div>Error: {error}</div>}
-      {requests.map(request => (
-        <div key={request.id}>
-          {/* Request details */}
-          <button onClick={() => handleApprove(request.id)}>
-            Approve
-          </button>
+    return (
+        <div>
+            {loading && <div>Loading...</div>}
+            {error && <div>Error: {error}</div>}
+            {requests.map((request) => (
+                <div key={request.id}>
+                    {/* Request details */}
+                    <button onClick={() => handleApprove(request.id)}>
+                        Approve
+                    </button>
+                </div>
+            ))}
         </div>
-      ))}
-    </div>
-  );
+    );
 }
 ```
 
 ### useAdminRequests
+
 ```javascript
-import { useAdminRequests } from '@/hooks/api/useAdminRequests';
+import { useAdminRequests } from "@/hooks/api/useAdminRequests";
 
 function SuperAdminDashboard() {
-  const {
-    requests,
-    loading,
-    approveRequest,
-    rejectRequest
-  } = useAdminRequests({
-    status: 'pending',
-    autoFetch: true
-  });
+    const { requests, loading, approveRequest, rejectRequest } =
+        useAdminRequests({
+            status: "pending",
+            autoFetch: true,
+        });
 
-  // Similar usage as useScribeRequests
+    // Similar usage as useScribeRequests
 }
 ```
 
 ### useMatches
+
 ```javascript
-import { useMatches } from '@/hooks/api/useMatches';
+import { useMatches } from "@/hooks/api/useMatches";
 
 function StudentDashboard() {
-  const {
-    matches,
-    loading,
-    createMatches,
-    confirmMatch
-  } = useMatches({
-    studentId: 'student123',
-    autoFetch: true
-  });
+    const { matches, loading, createMatches, confirmMatch } = useMatches({
+        studentId: "student123",
+        autoFetch: true,
+    });
 
-  const findScribes = async () => {
-    try {
-      const result = await createMatches({
-        studentId: 'student123',
-        examDetails: {
-          // exam details
-        },
-        location: 'Delhi'
-      });
-      console.log('Found matches:', result.matches);
-    } catch (error) {
-      console.error('Failed to find matches:', error);
-    }
-  };
+    const findScribes = async () => {
+        try {
+            const result = await createMatches({
+                studentId: "student123",
+                examDetails: {
+                    // exam details
+                },
+                location: "Delhi",
+            });
+            console.log("Found matches:", result.matches);
+        } catch (error) {
+            console.error("Failed to find matches:", error);
+        }
+    };
 }
 ```
 
 ## Components
 
 ### AdminRequestManager
+
 For SuperAdmin dashboard to manage admin approval requests.
 
 ```javascript
-import AdminRequestManager from '@/components/admin/AdminRequestManager';
+import AdminRequestManager from "@/components/admin/AdminRequestManager";
 
 function SuperAdminPage() {
-  return (
-    <AdminRequestManager superAdminId="superadmin123" />
-  );
+    return <AdminRequestManager superAdminId="superadmin123" />;
 }
 ```
 
 ### ScribeRequestManager
+
 For Admin dashboard to manage scribe requests.
 
 ```javascript
-import ScribeRequestManager from '@/components/admin/ScribeRequestManager';
+import ScribeRequestManager from "@/components/admin/ScribeRequestManager";
 
 function AdminPage() {
-  return (
-    <ScribeRequestManager adminId="admin123" />
-  );
+    return <ScribeRequestManager adminId="admin123" />;
 }
 ```
 
 ## Workflow Examples
 
 ### 1. New Admin Registration
+
 1. User registers as admin via `/api/users`
 2. System creates admin request via `/api/admin-requests`
 3. SuperAdmin sees request in `AdminRequestManager`
@@ -358,6 +364,7 @@ function AdminPage() {
 5. If approved, admin's `isApproved` flag is set to `true`
 
 ### 2. Student Requesting Scribe
+
 1. Student creates exam request
 2. System finds matching scribes via `/api/matches`
 3. Creates scribe request via `/api/scribe-requests`
@@ -366,6 +373,7 @@ function AdminPage() {
 6. If approved, match is confirmed
 
 ### 3. Post-Exam Feedback
+
 1. After exam completion, match status updated via `/api/matches`
 2. Student submits feedback via `/api/feedback`
 3. Scribe's rating is automatically updated
@@ -388,6 +396,7 @@ FIREBASE=your-firebase-api-key
 ## Testing
 
 ### Create Demo Data
+
 ```javascript
 // Create demo users
 POST /api/demo
@@ -405,6 +414,7 @@ POST /api/demo
 ## Error Handling
 
 All APIs return consistent error responses:
+
 ```javascript
 {
   "error": "Error message",
@@ -413,6 +423,7 @@ All APIs return consistent error responses:
 ```
 
 Common HTTP status codes:
+
 - `200` - Success
 - `201` - Created
 - `400` - Bad Request (missing/invalid data)

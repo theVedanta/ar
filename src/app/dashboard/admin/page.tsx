@@ -1,27 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-    Star,
-    Search,
-    Filter,
-    Clock,
-    AlertCircle,
-    XCircle,
-} from "lucide-react";
+import { Clock, AlertCircle, XCircle } from "lucide-react";
 import ScribeRequestManager from "@/components/admin/ScribeRequestManager";
 import { useScribeRequests } from "@/hooks/api/useScribeRequests";
 import { useAdminStatus } from "@/hooks/api/useAdminStatus";

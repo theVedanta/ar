@@ -4,7 +4,6 @@ import {
     getPendingAdminRequests,
     approveAdminRequest,
     rejectAdminRequest,
-    getUserById,
 } from "@/lib/firebase/services";
 
 // GET - Get pending admin requests (for superadmin)

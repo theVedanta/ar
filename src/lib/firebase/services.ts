@@ -6,12 +6,10 @@ import {
     addDoc,
     setDoc,
     updateDoc,
-    deleteDoc,
     query,
     where,
     orderBy,
     limit,
-    Timestamp,
     serverTimestamp,
 } from "firebase/firestore";
 import db from "@/app/db";
@@ -20,14 +18,11 @@ import {
     Student,
     Scribe,
     Admin,
-    SuperAdmin,
     ScribeRequest,
     AdminRequest,
     Match,
     Feedback,
     COLLECTIONS,
-    RequestStatus,
-    MatchStatus,
 } from "./types";
 
 // User Services

@@ -1,34 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import {
-    Users,
-    BookOpen,
-    CheckCircle,
-    AlertTriangle,
-    Star,
-    Search,
-    Filter,
-} from "lucide-react";
+import { Users, BookOpen, CheckCircle, AlertTriangle } from "lucide-react";
 import AdminRequestManager from "@/components/admin/AdminRequestManager";
 import { useAdminRequests } from "@/hooks/api/useAdminRequests";
 

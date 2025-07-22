@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -150,10 +151,12 @@ export default function HomePage() {
                         </div>
                     </div>
                     <div className="flex-1 flex items-center justify-center md:pl-12 mt-10 md:mt-0">
-                        <img
+                        <Image
                             src="https://images.unsplash.com/photo-1632753133168-fbd6a64c796b?q=80&w=1364&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                             alt="A visually impaired person being helped by a scribe"
                             className="rounded-xl shadow-2xl object-cover w-full max-w-md h-auto"
+                            width={400}
+                            height={300}
                         />
                     </div>
                 </div>
