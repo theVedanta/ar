@@ -11,6 +11,8 @@ import { Clock, AlertCircle, XCircle } from "lucide-react";
 import ScribeRequestManager from "@/components/admin/ScribeRequestManager";
 import { useScribeRequests } from "@/hooks/api/useScribeRequests";
 import { useAdminStatus } from "@/hooks/api/useAdminStatus";
+import { SignedIn, SignedOut, UserButton, SignOutButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function AdminDashboard() {
     const { user } = useUser();
@@ -179,9 +181,20 @@ export default function AdminDashboard() {
                             <Badge variant="outline">
                                 School Administrator
                             </Badge>
-                            <Avatar>
-                                <AvatarFallback>AD</AvatarFallback>
-                            </Avatar>
+                            <SignedOut>
+                                <Button size="sm" variant="outline" asChild>
+                                    <Link href="/login">Login</Link>
+                                </Button>
+                                <Button size="sm" asChild>
+                                    <Link href="/signup">Sign Up</Link>
+                                </Button>
+                            </SignedOut>
+                            <SignedIn>
+                                <SignOutButton>
+                                    <Button variant="outline">Logout</Button>
+                                </SignOutButton>
+                                <UserButton afterSignOutUrl="/" />
+                            </SignedIn>
                         </div>
                     </div>
                 </div>

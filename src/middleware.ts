@@ -21,12 +21,12 @@ export default clerkMiddleware(async (auth, req) => {
 
     // If user is authenticated and on auth pages, redirect to choose-role
     if (userId && isAuthRoute(req)) {
-        return NextResponse.redirect(new URL("/choose-role", req.url));
+        return NextResponse.redirect(new URL("/loading", req.url));
     }
 
-    // If user is authenticated and on home page, redirect to choose-role
+    // If user is authenticated and on home page, redirect to loading
     if (userId && currentPath === "/") {
-        return NextResponse.redirect(new URL("/choose-role", req.url));
+        return NextResponse.redirect(new URL("/loading", req.url));
     }
 
     return NextResponse.next();
